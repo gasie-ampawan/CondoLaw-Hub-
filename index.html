@@ -1,0 +1,3260 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CondoLaw Hub — ระบบฐานข้อมูลและบริหารงานกฎหมายอาคารชุด</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f0f7f8; /* เทียบเคียงเฉดสีเขียวเทาอ่อน C-30130 */
+      --surface: #ffffff;
+      --surface-alt: #e5f1f2; /* เฉดสีฟ้าอ่อน C-20149 / C-30105 */
+      --border: #cadfe1;
+      --border-strong: #96c4c9;
+      --ink: #052a30; /* สีกรมท่าอมเขียวเข้มเพื่อให้อ่านง่าย */
+      --ink-secondary: #13464e;
+      --muted: #537d84;
+      --brand: #008ba3; /* ฟ้าน้ำทะเลหรูหรา C-20158 / D-20072 */
+      --brand-hover: #005f70;
+      --brand-soft: #e0f7fa; /* เฉดสีฟ้าอ่อน/เขียวไข่กา C-30105 */
+      --brand-ink: #ffffff;
+      --accent: #009fae; /* เฉดเขียวอมฟ้า C-30123 */
+      --accent-soft: #e0f2f1; /* เฉดเขียวเทา C-30130 */
+      --accent-border: #99dbdb;
+      --success: #10b981;
+      --success-soft: #ecfdf5;
+      --danger: #ef4444;
+      --danger-soft: #fef2f2;
+      --radius: 16px;
+      --radius-sm: 10px;
+      --shadow-sm: 0 1px 2px 0 rgba(5, 42, 48, 0.05);
+      --shadow: 0 4px 6px -1px rgba(5, 42, 48, 0.05), 0 2px 4px -2px rgba(5, 42, 48, 0.05);
+      --shadow-md: 0 10px 15px -3px rgba(5, 42, 48, 0.08), 0 4px 6px -4px rgba(5, 42, 48, 0.08);
+      --shadow-lg: 0 20px 25px -5px rgba(5, 42, 48, 0.1), 0 8px 10px -6px rgba(5, 42, 48, 0.1);
+      --space-1: 4px;
+      --space-2: 8px;
+      --space-3: 12px;
+      --space-4: 16px;
+      --space-6: 24px;
+      --space-8: 32px;
+      --font: 'Sarabun', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: var(--font);
+      color: var(--ink);
+      background: var(--bg);
+      line-height: 1.5;
+      font-size: 16px;
+    }
+
+    /* Top Header & Mode Switcher */
+    .app-header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .header-inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: var(--space-4) var(--space-6);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-4);
+    }
+
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: var(--space-4);
+    }
+
+    .brand-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--brand) 0%, #009fae 100%);
+      color: var(--brand-ink);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 22px;
+      flex-shrink: 0;
+      box-shadow: 0 4px 10px rgba(0, 139, 163, 0.2);
+    }
+
+    .brand-title {
+      margin: 0;
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--ink);
+      line-height: 1.2;
+    }
+
+    .brand-subtitle {
+      margin: 2px 0 0 0;
+      font-size: 13px;
+      color: var(--muted);
+      font-weight: 400;
+    }
+
+    .mode-switcher {
+      display: inline-flex;
+      background: var(--surface-alt);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 4px;
+      gap: 4px;
+    }
+
+    .mode-btn {
+      font: inherit;
+      font-size: 14px;
+      font-weight: 600;
+      padding: 10px 18px;
+      border-radius: 8px;
+      border: none;
+      background: transparent;
+      color: var(--ink-secondary);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .mode-btn:hover {
+      color: var(--ink);
+    }
+
+    .mode-btn.active-front {
+      background: var(--brand);
+      color: var(--brand-ink);
+      box-shadow: var(--shadow);
+    }
+
+    .mode-btn.active-back {
+      background: var(--accent);
+      color: #ffffff;
+      box-shadow: var(--shadow);
+    }
+
+    /* Navigation Bar */
+    .nav-bar {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 var(--space-6);
+      display: flex;
+      gap: var(--space-2);
+      overflow-x: auto;
+      scrollbar-width: none; /* Hide scrollbar for Firefox */
+    }
+
+    .nav-inner::-webkit-scrollbar {
+      display: none; /* Hide scrollbar for Chrome/Safari */
+    }
+
+    .nav-tab {
+      font: inherit;
+      font-size: 15px;
+      font-weight: 600;
+      padding: 16px 20px;
+      border: none;
+      border-bottom: 3px solid transparent;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .nav-tab:hover {
+      color: var(--ink);
+      background: var(--surface-alt);
+    }
+
+    .nav-tab.active {
+      color: var(--brand);
+      border-bottom-color: var(--brand);
+    }
+
+    body.is-backoffice .nav-tab.active {
+      color: var(--accent);
+      border-bottom-color: var(--accent);
+    }
+
+    /* Main Container */
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: var(--space-6);
+    }
+
+    /* Mode Banner */
+    .mode-banner {
+      margin-bottom: var(--space-6);
+      padding: var(--space-4) var(--space-6);
+      border-radius: var(--radius);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-4);
+      box-shadow: var(--shadow);
+    }
+
+    .mode-banner.front {
+      background: linear-gradient(135deg, var(--brand-soft) 0%, #b2ebf2 100%);
+      border: 1px solid #4dd0e1;
+      color: var(--ink);
+    }
+
+    .mode-banner.back {
+      background: linear-gradient(135deg, var(--accent-soft) 0%, #e0f2f1 100%);
+      border: 1px solid var(--accent-border);
+      color: var(--ink);
+    }
+
+    .mode-banner h2 {
+      margin: 0 0 4px 0;
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .mode-banner p {
+      margin: 0;
+      font-size: 14px;
+      opacity: 0.95;
+    }
+
+    /* Cards & Controls */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: var(--space-6);
+      margin-bottom: var(--space-6);
+    }
+
+    .section-header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: var(--space-4);
+      margin-bottom: var(--space-6);
+    }
+
+    .section-title {
+      margin: 0;
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--ink);
+      letter-spacing: -0.01em;
+    }
+
+    .section-desc {
+      margin: 6px 0 0 0;
+      font-size: 14.5px;
+      color: var(--muted);
+    }
+
+    .filter-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-4);
+      margin-bottom: var(--space-6);
+      background: var(--surface);
+      padding: var(--space-4) var(--space-6);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .input, .select, .textarea {
+      font: inherit;
+      font-size: 15px;
+      padding: 12px 16px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-strong);
+      background: var(--surface);
+      color: var(--ink);
+      width: 100%;
+    }
+
+    .textarea {
+      min-height: 110px;
+      resize: vertical;
+    }
+
+    .input:focus, .select:focus, .textarea:focus {
+      outline: none;
+      border-color: var(--brand);
+      box-shadow: 0 0 0 4px rgba(0, 139, 163, 0.15);
+    }
+
+    body.is-backoffice .input:focus, 
+    body.is-backoffice .select:focus, 
+    body.is-backoffice .textarea:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 4px rgba(0, 159, 174, 0.15);
+    }
+
+    .filter-bar .search-wrap {
+      flex: 1 1 320px;
+    }
+
+    .filter-bar .select-wrap {
+      flex: 0 1 280px;
+    }
+
+    .btn {
+      font: inherit;
+      font-size: 14.5px;
+      font-weight: 600;
+      padding: 12px 20px;
+      border-radius: var(--radius-sm);
+      border: 1px solid transparent;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      text-decoration: none;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--brand) 0%, #009fae 100%);
+      color: var(--brand-ink);
+      box-shadow: 0 4px 12px rgba(0, 139, 163, 0.2);
+    }
+
+    .btn-primary:hover {
+      background: var(--brand-hover);
+      transform: translateY(-1px);
+    }
+
+    .btn-accent {
+      background: linear-gradient(135deg, var(--accent) 0%, #00838f 100%);
+      color: #ffffff;
+      box-shadow: 0 4px 12px rgba(0, 159, 174, 0.2);
+    }
+
+    .btn-accent:hover {
+      background: #00606f;
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      background: var(--surface);
+      color: var(--ink-secondary);
+      border-color: var(--border-strong);
+    }
+
+    .btn-secondary:hover {
+      background: var(--surface-alt);
+      color: var(--ink);
+    }
+
+    .btn-danger {
+      background: var(--danger-soft);
+      color: var(--danger);
+      border-color: #fca5a5;
+    }
+
+    .btn-danger:hover {
+      background: #fee2e2;
+    }
+
+    .btn-sm {
+      padding: 8px 14px;
+      font-size: 13px;
+    }
+
+    /* Grid layouts */
+    .grid-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+      gap: var(--space-6);
+    }
+
+    .law-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: var(--space-6);
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: var(--space-4);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .law-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+      background: var(--brand);
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: var(--brand-soft);
+      color: var(--brand);
+      letter-spacing: 0.02em;
+    }
+
+    .tag-amber {
+      background: var(--accent-soft);
+      color: var(--accent);
+    }
+
+    .tag-green {
+      background: var(--success-soft);
+      color: var(--success);
+    }
+
+    .law-section-num {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--brand);
+      margin: var(--space-2) 0;
+    }
+
+    .law-title {
+      font-size: 17px;
+      font-weight: 700;
+      margin: 0 0 var(--space-2) 0;
+      color: var(--ink);
+    }
+
+    .law-content {
+      font-size: 14.5px;
+      color: var(--ink-secondary);
+      margin: 0 0 var(--space-3) 0;
+      text-align: justify;
+    }
+
+    .law-note {
+      background: var(--surface-alt);
+      border-left: 3px solid var(--brand);
+      padding: 12px 14px;
+      font-size: 14px;
+      color: var(--ink-secondary);
+      border-radius: 0 8px 8px 0;
+    }
+
+    /* FAQ Accordion */
+    .faq-item {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin-bottom: var(--space-4);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+
+    .faq-question {
+      width: 100%;
+      text-align: left;
+      font: inherit;
+      padding: var(--space-4) var(--space-6);
+      background: var(--surface);
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-4);
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 16.5px;
+      color: var(--ink);
+    }
+
+    .faq-question:hover {
+      background: var(--surface-alt);
+    }
+
+    .faq-body {
+      padding: 0 var(--space-6) var(--space-6) var(--space-6);
+      border-top: 1px solid var(--border);
+      background: var(--surface);
+      display: none;
+    }
+
+    .faq-item.open .faq-body {
+      display: block;
+    }
+
+    /* Case Studies */
+    .case-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: var(--space-6);
+      box-shadow: var(--shadow);
+      margin-bottom: var(--space-6);
+    }
+
+    .case-header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-2);
+      margin-bottom: var(--space-4);
+    }
+
+    .case-id {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--brand);
+    }
+
+    .case-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: var(--space-4);
+      margin-top: var(--space-4);
+    }
+
+    .case-block {
+      background: var(--surface-alt);
+      padding: var(--space-4);
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+    }
+
+    .case-block h4 {
+      margin: 0 0 var(--space-2) 0;
+      font-size: 13.5px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    .case-block p {
+      margin: 0;
+      font-size: 14.5px;
+      color: var(--ink);
+      text-align: justify;
+    }
+
+    /* Forum */
+    .forum-layout {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: var(--space-6);
+    }
+
+    @media (min-width: 960px) {
+      .forum-layout {
+        grid-template-columns: 380px 1fr;
+        align-items: start;
+      }
+    }
+
+    /* AI Assistant Interface Styles */
+    .ai-chat-container {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: var(--space-6);
+    }
+
+    @media (min-width: 900px) {
+      .ai-chat-container {
+        grid-template-columns: 320px 1fr;
+      }
+    }
+
+    .ai-sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-4);
+    }
+
+    .ai-chat-box {
+      display: flex;
+      flex-direction: column;
+      min-height: 560px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .ai-chat-header {
+      background: linear-gradient(135deg, var(--brand) 0%, #009fae 100%);
+      color: #ffffff;
+      padding: var(--space-4) var(--space-6);
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+    }
+
+    .ai-chat-messages {
+      flex: 1;
+      padding: var(--space-6);
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-4);
+      background: #f8fafc;
+      max-height: 480px;
+    }
+
+    .ai-msg {
+      max-width: 85%;
+      padding: var(--space-4);
+      border-radius: var(--radius);
+      font-size: 15px;
+    }
+
+    .ai-msg-incoming {
+      background: var(--surface);
+      color: var(--ink);
+      align-self: flex-start;
+      border-bottom-left-radius: 4px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .ai-msg-outgoing {
+      background: var(--brand);
+      color: #ffffff;
+      align-self: flex-end;
+      border-bottom-right-radius: 4px;
+    }
+
+    .ai-thinking {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: var(--space-3) var(--space-4);
+      background: #eef5f6;
+      color: var(--muted);
+      border-radius: var(--radius);
+      align-self: flex-start;
+      font-size: 14px;
+    }
+
+    .ai-dot {
+      width: 8px;
+      height: 8px;
+      background: var(--muted);
+      border-radius: 50%;
+      animation: ai-bounce 1.4s infinite ease-in-out both;
+    }
+
+    .ai-dot:nth-child(1) { animation-delay: -0.32s; }
+    .ai-dot:nth-child(2) { animation-delay: -0.16s; }
+
+    @keyframes ai-bounce {
+      0%, 80%, 100% { transform: scale(0); }
+      40% { transform: scale(1.0); }
+    }
+
+    /* Modal dialog for Log in */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(7, 38, 44, 0.6);
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 200;
+    }
+
+    .modal-card {
+      background: var(--surface);
+      border-radius: var(--radius);
+      width: 100%;
+      max-width: 420px;
+      padding: var(--space-8);
+      box-shadow: var(--shadow-lg);
+      border: 1px solid var(--border);
+    }
+
+    /* Tables */
+    .table-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14.5px;
+    }
+
+    th, td {
+      text-align: left;
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: middle;
+    }
+
+    th {
+      background: var(--surface-alt);
+      font-weight: 700;
+      color: var(--ink-secondary);
+      white-space: nowrap;
+    }
+
+    /* Empty states */
+    .empty-state {
+      text-align: center;
+      padding: var(--space-8) var(--space-6);
+      background: var(--surface);
+      border: 2px dashed var(--border-strong);
+      border-radius: var(--radius);
+      color: var(--muted);
+    }
+
+    .empty-state h3 {
+      margin: 0 0 8px 0;
+      color: var(--ink);
+      font-size: 19px;
+    }
+
+    /* Live Quiz Elements */
+    .quiz-lobby {
+      text-align: center;
+      padding: var(--space-6);
+    }
+
+    .quiz-timer-bar {
+      height: 6px;
+      background: var(--border);
+      border-radius: 99px;
+      overflow: hidden;
+      margin-bottom: var(--space-4);
+    }
+
+    .quiz-timer-fill {
+      height: 100%;
+      background: var(--brand);
+      width: 0%;
+      transition: width 0.2s linear;
+    }
+
+    /* Ranking section */
+    .leaderboard-table th, .leaderboard-table td {
+      padding: 10px 14px;
+    }
+
+    .rank-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      font-weight: 700;
+      font-size: 13px;
+    }
+
+    .rank-1 { background: #fef08a; color: #854d0e; }
+    .rank-2 { background: #e2e8f0; color: #475569; }
+    .rank-3 { background: #ffedd5; color: #c2410c; }
+    .rank-other { background: var(--surface-alt); color: var(--muted); }
+
+    .error-msg {
+      color: var(--danger);
+      font-size: 13.5px;
+      margin-top: 6px;
+      display: none;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="app-header">
+    <div class="header-inner">
+      <div class="brand-group">
+        <div class="brand-icon" aria-hidden="true">กม</div>
+        <div>
+          <h1 class="brand-title">CondoLaw Hub — กฎหมายการบริหารอาคารชุด</h1>
+          <p class="brand-subtitle">ระบบอ้างอิง พ.ร.บ.อาคารชุด พ.ศ. 2522 (แก้ไขเพิ่มเติม พ.ศ. 2551) • กรณีศึกษาคำพิพากษาศาลฎีกา • ถาม-ตอบ &amp; แบบทดสอบ</p>
+        </div>
+      </div>
+
+      <!-- Front-office / Back-office Switcher -->
+      <div class="mode-switcher" role="group" aria-label="สลับโหมดหน้าบ้านและหลังบ้าน">
+        <button type="button" id="btnModeFront" class="mode-btn active-front" onclick="switchMode('front')">
+          <span>🏢 หน้าบ้าน (เจ้าของร่วม)</span>
+        </button>
+        <button type="button" id="btnModeBack" class="mode-btn" onclick="openLoginModal()">
+          <span>⚙️ หลังบ้าน (ผู้ดูแลระบบ)</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <nav class="nav-bar" aria-label="เมนูหลัก">
+      <div class="nav-inner">
+        <button type="button" class="nav-tab active" data-tab="laws" onclick="switchTab('laws')">
+          📖 พ.ร.บ.อาคารชุด (มาตราสำคัญ)
+        </button>
+        <button type="button" class="nav-tab" data-tab="ai" onclick="switchTab('ai')">
+          🧠 ผู้ช่วยกฎหมาย AI อัจฉริยะ
+        </button>
+        <button type="button" class="nav-tab" data-tab="faq" onclick="switchTab('faq')">
+          💡 ถาม-ตอบ &amp; แนวทางแก้ปัญหา
+        </button>
+        <button type="button" class="nav-tab" data-tab="cases" onclick="switchTab('cases')">
+          ⚖️ กรณีศึกษาคำพิพากษาศาลฎีกา
+        </button>
+        <button type="button" class="nav-tab" data-tab="forum" onclick="switchTab('forum')">
+          💬 กระทู้ถาม-ตอบแสดงความคิดเห็น
+        </button>
+        <button type="button" class="nav-tab" data-tab="quiz" onclick="switchTab('quiz')">
+          🎯 สุ่มข้อสอบ Quiz 10 ข้อรายเดือน
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main class="container">
+    <!-- Mode Context Banner -->
+    <div id="modeBanner" class="mode-banner front">
+      <div>
+        <h2 id="modeBannerTitle">โหมดหน้าบ้าน (Front-Office): สำหรับเจ้าของร่วม คณะกรรมการ และผู้สนใจทั่วไป</h2>
+        <p id="modeBannerDesc">ค้นหาตัวบทกฎหมายตาม พ.ร.บ.อาคารชุด ศึกษาแนวทางแก้ไขปัญหา คดีตัวอย่างศาลฎีกา ร่วมตั้งกระทู้ถาม-ตอบ และทำแบบทดสอบวัดความรู้</p>
+      </div>
+      <div>
+        <button type="button" class="btn btn-secondary btn-sm" id="modeQuickToggleBtn" onclick="openLoginModal()">
+          เข้าระบบหลังบ้านเพื่อจัดการข้อมูล →
+        </button>
+      </div>
+    </div>
+
+    <!-- ==================== LOGIN MODAL ==================== -->
+    <div id="loginModal" class="modal-overlay hidden">
+      <div class="modal-card">
+        <h3 style="margin-top:0;font-size:20px;display:flex;align-items:center;gap:8px;">🔒 เข้าสู่ระบบหลังบ้าน (Back-Office)</h3>
+        <p style="font-size:14px;color:var(--muted);margin-bottom:20px;">กรุณากรอกข้อมูลเพื่อพิสูจน์สิทธิ์การเข้าถึงระบบควบคุมกฎหมายและคำพิพากษา</p>
+        <form onsubmit="handleLoginSubmit(event)">
+          <div class="form-group" style="margin-bottom:12px;">
+            <label class="form-label" for="loginUsername">ชื่อผู้ใช้งาน (Username)</label>
+            <input type="text" id="loginUsername" class="input" placeholder="ระบุ admin" required autocomplete="username">
+          </div>
+          <div class="form-group" style="margin-bottom:16px;">
+            <label class="form-label" for="loginPassword">รหัสผ่าน (Password)</label>
+            <input type="password" id="loginPassword" class="input" placeholder="ระบุ condolaw2025" required autocomplete="current-password">
+          </div>
+          <p id="loginError" class="error-msg" style="margin-bottom:12px;">ชื่อผู้ใช้งานหรือรหัสผ่านไม่ถูกต้อง</p>
+          <div style="display:flex;justify-content:flex-end;gap:8px;">
+            <button type="button" class="btn btn-secondary" onclick="closeLoginModal()">ยกเลิก</button>
+            <button type="submit" class="btn btn-primary">เข้าสู่ระบบ</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- ==================== VIEW 1: LAWS ==================== -->
+    <section id="view-laws" class="tab-view">
+      <!-- FRONT-OFFICE LAWS -->
+      <div id="laws-front">
+        <div class="section-header">
+          <div>
+            <h2 class="section-title">📖 ฐานข้อมูลอ้างอิง พ.ร.บ.อาคารชุด พ.ศ. 2522 (แก้ไขเพิ่มเติมถึงฉบับที่ 4 พ.ศ. 2551)</h2>
+            <p class="section-desc">รวบรวมตัวบทกฎหมายและสาระสำคัญที่จำเป็นสำหรับการบริหารนิติบุคคลอาคารชุด คณะกรรมการ และเจ้าของร่วม</p>
+          </div>
+        </div>
+
+        <div class="filter-bar">
+          <div class="search-wrap">
+            <input type="search" id="lawSearchInput" class="input" placeholder="ค้นหาตามชื่อมาตรา เลขมาตรา หรือรายละเอียดคำค้น..." oninput="renderLaws()">
+          </div>
+          <div class="select-wrap">
+            <select id="lawCategorySelect" class="select" onchange="renderLaws()">
+              <option value="all">ทุกหมวดหมู่กฎหมาย</option>
+              <option value="นิยามและกรรมสิทธิ์">นิยามและกรรมสิทธิ์ (ม.4, ม.14, ม.15)</option>
+              <option value="การโฆษณาและสัญญา">การโฆษณาและสัญญาจะซื้อจะขาย (ม.6/1, ม.6/2)</option>
+              <option value="การใช้ประโยชน์และค่าส่วนกลาง">การใช้พื้นที่และค่าส่วนกลาง (ม.17/1, ม.18, ม.18/1)</option>
+              <option value="ใบปลอดหนี้และบุริมสิทธิ">ใบปลอดหนี้และบุริมสิทธิ (ม.29, ม.41)</option>
+              <option value="นิติบุคคลและการประชุม">นิติบุคคล ผู้จัดการ และการประชุมใหญ่ (ม.32, ม.33, ม.35-36, ม.48)</option>
+              <option value="บทกำหนดโทษ">บทกำหนดโทษ (ม.65)</option>
+              <option value="กฎหมายอื่นที่เกี่ยวข้อง">กฎหมายอื่นที่เกี่ยวข้อง (พ.ร.บ.ควบคุมอาคาร, พ.ร.บ.ทวงหนี้, พ.ร.บ.ทวงถามหนี้, พ.ร.บ.คุ้มครองผู้บริโภค)</option>
+            </select>
+          </div>
+        </div>
+
+        <div id="lawsGrid" class="grid-cards"></div>
+
+        <!-- Related Government Agencies Section -->
+        <div class="card" style="margin-top: 32px; border-top: 4px solid var(--brand);">
+          <h3 style="margin-top: 0; display:flex; align-items:center; gap:8px;">🏢 หน่วยงานราชการที่เกี่ยวข้องและการติดต่อประสานงาน</h3>
+          <p style="font-size: 14.5px; color: var(--muted); margin-bottom: 20px;">รายชื่อหน่วยงานรัฐที่มีบทบาทสำคัญในการกำกับดูแล การจดทะเบียน และการบังคับใช้กฎหมายสำหรับนิติบุคคลอาคารชุด</p>
+          <div class="grid-cards" id="govAgenciesGrid">
+            <!-- Will render gov agencies dynamically -->
+          </div>
+        </div>
+      </div>
+
+      <!-- BACK-OFFICE LAWS -->
+      <div id="laws-back" class="hidden">
+        <div class="section-header">
+          <div>
+            <h2 class="section-title">⚙️ จัดการฐานข้อมูลมาตรา พ.ร.บ.อาคารชุด (Back-Office)</h2>
+            <p class="section-desc">เพิ่ม แก้ไข หรือลบข้อมูลมาตราอ้างอิงเพื่อใช้ในการสืบค้นหน้าบ้านและสุ่มข้อสอบ</p>
+          </div>
+        </div>
+
+        <div class="admin-grid">
+          <div class="card">
+            <h3 id="lawFormHeading" style="margin-top:0;">เพิ่มมาตราอ้างอิงใหม่</h3>
+            <form id="lawForm" onsubmit="saveLaw(event)" novalidate>
+              <input type="hidden" id="lawEditId">
+              <div class="form-group">
+                <label class="form-label" for="lawSectionInput">เลขมาตรา *</label>
+                <input type="text" id="lawSectionInput" class="input" placeholder="เช่น มาตรา 18/1" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="lawCategoryInput">หมวดหมู่ *</label>
+                <select id="lawCategoryInput" class="select" required>
+                  <option value="นิยามและกรรมสิทธิ์">นิยามและกรรมสิทธิ์ (ม.4, ม.14, ม.15)</option>
+                  <option value="การโฆษณาและสัญญา">การโฆษณาและสัญญาจะซื้อจะขาย (ม.6/1, ม.6/2)</option>
+                  <option value="การใช้ประโยชน์และค่าส่วนกลาง">การใช้พื้นที่และค่าส่วนกลาง (ม.17/1, ม.18, ม.18/1)</option>
+                  <option value="ใบปลอดหนี้และบุริมสิทธิ">ใบปลอดหนี้และบุริมสิทธิ (ม.29, ม.41)</option>
+                  <option value="นิติบุคคลและการประชุม">นิติบุคคล ผู้จัดการ และการประชุมใหญ่ (ม.32, ม.33, ม.35-36, ม.48)</option>
+                  <option value="บทกำหนดโทษ">บทกำหนดโทษ (ม.65)</option>
+                  <option value="กฎหมายอื่นที่เกี่ยวข้อง">กฎหมายอื่นที่เกี่ยวข้อง (พ.ร.บ.ควบคุมอาคาร, พ.ร.บ.ทวงหนี้, พ.ร.บ.ทวงถามหนี้, พ.ร.บ.คุ้มครองผู้บริโภค)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="lawTitleInput">หัวข้อสาระสำคัญ *</label>
+                <input type="text" id="lawTitleInput" class="input" placeholder="เช่น เงินเพิ่มและมาตรการกรณีค้างชำระค่าส่วนกลาง" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="lawContentInput">รายละเอียดตัวบท / สาระสำคัญตามกฎหมาย *</label>
+                <textarea id="lawContentInput" class="textarea" placeholder="ระบุเนื้อหาสาระสำคัญของมาตรา..." required></textarea>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="lawNoteInput">แนวทางปฏิบัติสำหรับการบริหารอาคารชุด *</label>
+                <textarea id="lawNoteInput" class="textarea" placeholder="ระบุข้อสังเกตหรือแนวทางนำไปใช้จริง..." required></textarea>
+              </div>
+              <p id="lawFormError" class="error-msg">กรุณากรอกข้อมูลให้ครบทุกช่อง</p>
+              <div style="display:flex; gap:8px;">
+                <button type="submit" class="btn btn-accent">บันทึกข้อมูลมาตรา</button>
+                <button type="button" class="btn btn-secondary" onclick="resetLawForm()">ล้างฟอร์ม</button>
+              </div>
+            </form>
+          </div>
+
+          <div class="card">
+            <h3 style="margin-top:0;">รายการมาตราทั้งหมดในระบบ</h3>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>มาตรา</th>
+                    <th>หมวดหมู่</th>
+                    <th>หัวข้อสาระสำคัญ</th>
+                    <th>จัดการ</th>
+                  </tr>
+                </thead>
+                <tbody id="lawsAdminTable"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== VIEW 2: AI ASSISTANT ==================== -->
+    <section id="view-ai" class="tab-view hidden">
+      <div id="ai-front">
+        <div class="section-header">
+          <div>
+            <h2 class="section-title">🧠 ผู้ช่วยกฎหมาย AI อัจฉริยะ (AI Legal Copilot &amp; Case Searcher)</h2>
+            <p class="section-desc">สืบค้นประเด็นข้อพิพาท คดีฎีกาอ้างอิง และแนวทางปฏิบัติทางกฎหมายอาคารชุดอย่างรวดเร็วด้วยปัญญาประดิษฐ์จำลอง</p>
+          </div>
+        </div>
+
+        <div class="ai-chat-container">
+          <div class="ai-sidebar">
+            <div class="card" style="padding: var(--space-4);">
+              <h3 style="margin:0 0 var(--space-2) 0; font-size:15px; color:var(--brand); text-transform:uppercase;">💡 หัวข้อยอดนิยมที่สืบค้น</h3>
+              <p style="font-size:13px; color:var(--muted); margin:0 0 var(--space-3) 0;">คลิกหัวข้อด้านล่างเพื่อให้ AI ค้นหาคดีและวิเคราะห์ข้อกฎหมายทันที</p>
+              <div style="display:flex; flex-direction:column; gap: var(--space-2);">
+                <button type="button" class="prompt-chip" onclick="submitAiPrompt('นิติบุคคลสามารถตัดน้ำหรือล็อกล้อรถลูกบ้านที่ค้างค่าส่วนกลางได้ไหม?')">🔒 1. การตัดน้ำหรือล็อกล้อคดีล็อกล้อ</button>
+                <button type="button" class="prompt-chip" onclick="submitAiPrompt('ท่อน้ำรวมอุดตัน น้ำท่วมห้องชุด นิติบุคคลต้องรับผิดชอบไหม?')">💧 2. ท่อน้ำส่วนกลางตัน น้ำท่วมห้องชุด</button>
+                <button type="button" class="prompt-chip" onclick="submitAiPrompt('เจ้าของโครงการ (ผู้พัฒนา) ต้องจ่ายค่าส่วนกลางของห้องชุดที่ยังขายไม่หมดหรือไม่?')">🏢 3. ผู้จัดสรรโครงการค้างค่าส่วนกลาง</button>
+                <button type="button" class="prompt-chip" onclick="submitAiPrompt('การนำทรัพย์ส่วนกลางหรือที่จอดรถไปสร้างร้านค้า/ร้านกาแฟทำได้ไหม?')">☕ 4. สร้างร้านค้าในพื้นที่ทรัพย์ส่วนกลาง</button>
+                <button type="button" class="prompt-chip" onclick="submitAiPrompt('ค้างค่าส่วนกลางเกิน 5 ปี นิติบุคคลสามารถเรียกเก็บเต็มจำนวนจากการขายทอดตลาดได้ไหม?')">⚖️ 5. หนี้ค้างเกิน 5 ปีและการขายทอดตลาด</button>
+                <button type="button" class="prompt-chip" onclick="submitAiPrompt('การปรับขึ้นอัตราค่าส่วนกลางต้องใช้มติที่ประชุมใหญ่เท่าไหร่?')">📊 6. การประชุมใหญ่มติปรับขึ้นค่าส่วนกลาง</button>
+              </div>
+            </div>
+            <div class="card" style="padding: var(--space-4); background: var(--surface-alt);">
+              <h4 style="margin:0 0 var(--space-1) 0; font-size:14px;">🔎 ความเชื่อมโยงของข้อมูล</h4>
+              <p style="margin:0; font-size:12.5px; color:var(--muted);">AI เชื่อมโยงข้อมูลบทวิเคราะห์จากมาตรา พ.ร.บ. อาคารชุด และประเด็นตามคำพิพากษาศาลฎีกาจริงในระบบ เพื่อให้คำตอบที่ถูกต้องตามหลักนิติศาสตร์</p>
+            </div>
+          </div>
+
+          <div class="ai-chat-box">
+            <div class="ai-chat-header">
+              <div class="ai-avatar">🧠</div>
+              <div>
+                <div style="font-weight:700; font-size:16px; line-height:1.2;">ฝ่ายวิเคราะห์กฎหมาย AI อาคารชุด</div>
+                <div style="font-size:12px; color:rgba(255,255,255,0.8);">พร้อมสืบค้นคดีอ้างอิงและประเมินข้อกฎหมายตลอด 24 ชม.</div>
+              </div>
+            </div>
+            <div class="ai-chat-messages" id="aiChatMessages">
+              <div class="ai-msg ai-msg-incoming">
+                สวัสดีครับ ผมคือผู้ช่วยวิเคราะห์และสืบค้นกฎหมายอาคารชุด AI อัจฉริยะ ยินดีช่วยเหลือเจ้าของร่วม นิติบุคคล และคณะกรรมการทุกท่านครับ
+                <br><br>
+                ท่านสามารถ<strong>พิมพ์ข้อความคำถามหรือคีย์เวิร์ด</strong> (เช่น ค้างค่าส่วนกลาง, ล็อกล้อ, น้ำรั่วซึม, ร้านค้า, ใบปลอดหนี้) หรือคลิกเลือก<strong>หัวข้อยอดนิยมทางซ้ายมือ</strong> เพื่อค้นหาแนวทางคดีฎีกาอ้างอิงและคำแนะนำได้ทันทีครับ
+              </div>
+            </div>
+            <div class="ai-input-area">
+              <input type="text" id="aiInput" class="input" placeholder="พิมพ์ข้อความคำถามเพื่อปรึกษา AI (เช่น นิติบุคคลฟ้องคดีเรียกค่าส่วนกลางได้ไหม?)..." onkeydown="if(event.key === 'Enter') sendAiMessage()">
+              <button type="button" class="btn btn-primary" onclick="sendAiMessage()">ส่งคำถาม</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- BACK-OFFICE AI -->
+      <div id="ai-back" class="hidden">
+        <div class="section-header">
+          <div>
+            <h2 class="section-title">ตั้งค่าคำสั่ง AI System Prompt &amp; สิทธิ์การเข้าถึงหลังบ้าน (Back-Office Settings)</h2>
+            <p class="section-desc">ตรวจสอบกฎเหล็กในการวิเคราะห์ข้อมูลของ AI และตั้งค่าชื่อผู้ใช้รหัสผ่านสำหรับเจ้าหน้าที่</p>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3 style="margin-top:0;">หลักเกณฑ์การวินิจฉัยของ AI (AI Guidelines &amp; Rules)</h3>
+          <p style="font-size:14.5px;">ระบบ AI ค้นหาและจับคู่กฎหมายมีเกณฑ์การประเมินโดยเชื่อมต่อกับฐานข้อมูลหลักในหน้าบ้าน ดึงตัวบทกฎหมายจริงและแนวคำพิพากษาศาลฎีกามาแสดงอย่างแม่นยำ</p>
+          <div style="background:var(--surface-alt); border:1px solid var(--border); padding:var(--space-4); border-radius:var(--radius-sm); font-family:monospace; font-size:13px; line-height:1.6; color:var(--ink-secondary);">
+            # RULES FOR LEGAL AI DISCOVERY SYSTEM:<br>
+            1. MUST always resolve keywords directly to real Supreme Court Judgments (e.g., "1013/2550", "3615/2566", "2081/2567").<br>
+            2. MUST point to exact sections of Condo Act (Section 18, Section 18/1, Section 17/1).<br>
+            3. MUST provide step-by-step compliant action plans for Juristic Persons (นิติบุคคล) to avoid lawsuit risks.<br>
+            4. If queries are out-of-scope, display friendly legal disclaimer.
+          </div>
+          <div style="margin-top:var(--space-4); display:flex; gap:12px; align-items:center;">
+            <span class="tag tag-green">สถานะ AI: ทำงานปกติ (ONLINE)</span>
+            <span id="aiDbStatusText" style="font-size:14px; color:var(--muted);">เชื่อมต่อคลังความรู้พร้อมวิเคราะห์</span>
+          </div>
+        </div>
+
+        <!-- Admin credentials configuration form -->
+        <div class="card" style="margin-top:24px;">
+          <h3 style="margin-top:0;">🔒 ตั้งค่าสิทธิ์และเปลี่ยนรหัสผ่านผู้ดูแลระบบ (Admin Access Configuration)</h3>
+          <p style="font-size:14.5px;color:var(--muted);margin-bottom:16px;">คุณสามารถปรับเปลี่ยนชื่อผู้ใช้งาน (Username) และรหัสผ่าน (Password) สำหรับการเข้าใช้ระบบหลังบ้านได้ที่นี่</p>
+          <form id="credentialsForm" onsubmit="handleUpdateCredentials(event)" style="max-width:380px;" novalidate>
+            <div class="form-group">
+              <label class="form-label" for="updateUsername">ชื่อผู้ใช้งานใหม่ *</label>
+              <input type="text" id="updateUsername" class="input" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="updatePassword">รหัสผ่านใหม่ *</label>
+              <input type="password" id="updatePassword" class="input" required placeholder="ระบุรหัสผ่านใหม่ที่ต้องการ">
+            </div>
+            <button type="submit" class="btn btn-accent">บันทึกสิทธิ์ผู้ใช้งานใหม่</button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== VIEW 3: FAQ & TROUBLESHOOTING ==================== -->
+    <section id="view-faq" class="tab-view hidden">
+      <!-- FRONT-OFFICE FAQ -->
+      <div id="faq-front">
+        <div class="section-header">
+          <div>
+            <h2 class="section-title">💡 ถาม-ตอบปัญหา &amp; แนวทางการแก้ไขปัญหาที่พบบ่อยในการบริหารอาคารชุด</h2>
+            <p class="section-desc">ค้นหาแนวทางแก้ไขข้อพิพาทตามกรอบ พ.ร.บ.อาคารชุด และแนวคำพิพากษาศาลฎีกา สำหรับนิติบุคคลและเจ้าของร่วม</p>
+          </div>
+        </div>
+
+        <div class="filter-bar">
+          <div class="search-wrap">
+            <input type="search" id="faqSearchInput" class="input" placeholder="พิมพ์ปัญหาที่พบ เช่น ค้างค่าส่วนกลาง, ล็อกล้อ, น้ำรั่วซึม, เปิดร้านค้าในคอนโด..." oninput="renderFaqs()">
+          </div>
+          <div class="select-wrap">
+            <select id="faqCategorySelect" class="select" onchange="renderFaqs()" aria-label="หมวดหมู่ปัญหา">
+              <option value="all">ทุกประเภทปัญหา</option>
+              <option value="การติดตามหนี้ค่าส่วนกลาง">การติดตามหนี้ค่าส่วนกลาง</option>
+              <option value="การใช้ทรัพย์ส่วนกลางและที่จอดรถ">การใช้ทรัพย์ส่วนกลางและที่จอดรถ</option>
+              <option value="ความชำรุดบกพร่องและน้ำรั่วซึม">ความชำรุดบกพร่องและน้ำรั่วซึม</option>
+              <option value="การประชุมใหญ่และข้อบังคับ">การประชุมใหญ่และข้อบังคับ</option>
+              <option value="การขายทอดตลาดและใบปลอดหนี้">การขายทอดตลาดและใบปลอดหนี้</option>
+            </select>
+          </div>
+        </div>
+
+        <div id="faqList"></div>
+      </div>
+
+      <!-- BACK-OFFICE FAQ -->
+      <div id="faq-back" class="hidden">
+        <div class="section-header">
+          <div>
+            <h2 class="section-title">⚙️ จัดการคลังคำถาม-ตอบ &amp; แนวทางแก้ไขปัญหา (Back-Office)</h2>
+            <p class="section-desc">เพิ่มหรือปรับปรุงแนวทางการแก้ไขปัญหาที่พบบ่อยสำหรับทีมบริหารอาคารชุดและลูกบ้าน</p>
+          </div>
+        </div>
+
+        <div class="admin-grid">
+          <div class="card">
+            <h3 id="faqFormHeading" style="margin-top:0;">เพิ่มหัวข้อถาม-ตอบแนวทางแก้ปัญหา</h3>
+            <form id="faqForm" onsubmit="saveFaq(event)" novalidate>
+              <input type="hidden" id="faqEditId">
+              <div class="form-group">
+                <label class="form-label" for="faqCategoryInput">หมวดหมู่ปัญหา *</label>
+                <select id="faqCategoryInput" class="select" required>
+                  <option value="การติดตามหนี้ค่าส่วนกลาง">การติดตามหนี้ค่าส่วนกลาง</option>
+                  <option value="การใช้ทรัพย์ส่วนกลางและที่จอดรถ">การใช้ทรัพย์ส่วนกลางและที่จอดรถ</option>
+                  <option value="ความชำรุดบกพร่องและน้ำรั่วซึม">ความชำรุดบกพร่องและน้ำรั่วซึม</option>
+                  <option value="การประชุมใหญ่และข้อบังคับ">การประชุมใหญ่และข้อบังคับ</option>
+                  <option value="การขายทอดตลาดและใบปลอดหนี้">การขายทอดตลาดและใบปลอดหนี้</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="faqQuestionInput">คำถาม / ปัญหาที่พบบ่อย *</label>
+                <input type="text" id="faqQuestionInput" class="input" placeholder="ระบุคำถามหรือสถานการณ์ปัญหา..." required>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="faqAnswerInput">คำวินิจฉัยและหลักกฎหมาย *</label>
+                <textarea id="faqAnswerInput" class="textarea" placeholder="อธิบายหลักกฎหมายที่เกี่ยวข้อง..." required></textarea>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="faqSolutionInput">แนวทางแก้ไขปัญหาเชิงปฏิบัติ (Step-by-Step) *</label>
+                <textarea id="faqSolutionInput" class="textarea" placeholder="ระบุขั้นตอนการดำเนินการสำหรับนิติบุคคลหรือเจ้าของร่วม..." required></textarea>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="faqRefInput">อ้างอิงมาตรา / ฎีกา *</label>
+                <input type="text" id="faqRefInput" class="input" placeholder="เช่น พ.ร.บ.อาคารชุด มาตรา 18/1, ฎีกาที่ 1013/2550" required>
+              </div>
+              <p id="faqFormError" class="error-msg">กรุณากรอกข้อมูลให้ครบทุกช่อง</p>
+              <div style="display:flex; gap:8px;">
+                <button type="submit" class="btn btn-accent">บันทึกคำถาม-ตอบ</button>
+                <button type="button" class="btn btn-secondary" onclick="resetFaqForm()">ล้างฟอร์ม</button>
+              </div>
+            </form>
+          </div>
+
+          <div class="card">
+            <h3 style="margin-top:0;">รายการคำถาม-แนวทางแก้ไขปัญหาทั้งหมด</h3>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>หมวดหมู่</th>
+                    <th>คำถาม / ปัญหา</th>
+                    <th>อ้างอิง</th>
+                    <th>จัดการ</th>
+                  </tr>
+                </thead>
+                <tbody id="faqAdminTable"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== VIEW 4: CASE STUDIES ==================== -->
+    <section id="view-cases" class="tab-view hidden">
+      <!-- FRONT-OFFICE CASES -->
+      <div id="cases-front">
+        <div class="section-header">
+          <div>
+            <h2 class="section-title">⚖️ ตัวอย่างข้อมูลคดีเกี่ยวกับการบริหารอาคารชุด (กรณีศึกษาคำพิพากษาศาลฎีกา)</h2>
+            <p class="section-desc">ศึกษาข้อเท็จจริง ประเด็นข้อกฎหมาย คำวินิจฉัยศาลฎีกา และบทเรียนสำหรับการบริหารนิติบุคคลอาคารชุด</p>
+          </div>
+        </div>
+
+        <div class="filter-bar">
+          <div class="search-wrap">
+            <input type="search" id="caseSearchInput" class="input" placeholder="ค้นหาเลขฎีกา, ประเด็นข้อพิพาท เช่น 1013/2550, ขายทอดตลาด, ร้านกาแฟ, ท่อน้ำตัน..." oninput="renderCases()">
+          </div>
+          <div class="select-wrap">
+            <select id="caseTopicSelect" class="select" onchange="renderCases()" aria-label="ประเด็นคดี">
+              <option value="all">ทุกประเด็นข้อพิพาท</option>
+              <option value="หนี้ค่าส่วนกลางและเบี้ยปรับ">หนี้ค่าส่วนกลางและเบี้ยปรับ</option>
+              <option value="การระงับใช้ทรัพย์ส่วนกลางและที่จอดรถ">การระงับใช้ทรัพย์ส่วนกลางและที่จอดรถ</option>
+              <option value="ความรับผิดของนิติบุคคลและผู้จัดสรร">ความรับผิดของนิติบุคคลและเจ้าของโครงการ</option>
+              <option value="การนำทรัพย์ส่วนกลางไปประกอบการค้า">การนำทรัพย์ส่วนกลางไปประกอบการค้า</option>
+              <option value="การประชุมใหญ่และอำนาจผู้จัดการ">การประชุมใหญ่และอำนาจผู้จัดการ</option>
+            </select>
+          </div>
+        </div>
+
+        <div id="casesList"></div>
+      </div>
+
+      <!-- BACK-OFFICE CASES -->
+      <div id="cases-back" class="hidden">
+        <div class="section-header">
+          <div>
+            <h2 class="section-title">⚙️ จัดการข้อมูลกรณีศึกษาคำพิพากษาศาลฎีกา (Back-Office)</h2>
+            <p class="section-desc">เพิ่มหรือแก้ไขตัวอย่างคดีพิพาทเกี่ยวกับการบริหารอาคารชุดเพื่อใช้เป็นกรณีศึกษา</p>
+          </div>
+        </div>
+
+        <div class="admin-grid">
+          <div class="card">
+            <h3 id="caseFormHeading" style="margin-top:0;">เพิ่มกรณีศึกษาคดีใหม่</h3>
+            <form id="caseForm" onsubmit="saveCase(event)" novalidate>
+              <input type="hidden" id="caseEditId">
+              <div class="form-group">
+                <label class="form-label" for="caseDikaInput">เลขคำพิพากษาศาลฎีกา *</label>
+                <input type="text" id="caseDikaInput" class="input" placeholder="เช่น คำพิพากษาศาลฎีกาที่ 2081/2567" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="caseTopicInput">หมวดหมู่ประเด็นคดี *</label>
+                <select id="caseTopicInput" class="select" required>
+                  <option value="หนี้ค่าส่วนกลางและเบี้ยปรับ">หนี้ค่าส่วนกลางและเบี้ยปรับ</option>
+                  <option value="การระงับใช้ทรัพย์ส่วนกลางและที่จอดรถ">การระงับใช้ทรัพย์ส่วนกลางและที่จอดรถ</option>
+                  <option value="ความรับผิดของนิติบุคคลและผู้จัดสรร">ความรับผิดของนิติบุคคลและเจ้าของโครงการ</option>
+                  <option value="การนำทรัพย์ส่วนกลางไปประกอบการค้า">การนำทรัพย์ส่วนกลางไปประกอบการค้า</option>
+                  <option value="การประชุมใหญ่และอำนาจผู้จัดการ">การประชุมใหญ่และอำนาจผู้จัดการ</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="caseTopicInput">ชื่อเรื่องกรณีศึกษา *</label>
+                <input type="text" id="caseTitleInput" class="input" placeholder="ระบุสรุปประเด็นคดี..." required>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="caseFactsInput">ข้อเท็จจริงและประเด็นพิพาท *</label>
+                <textarea id="caseFactsInput" class="textarea" placeholder="ระบุข้อเท็จจริงของคู่ความ..." required></textarea>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="caseRulingInput">คำวินิจฉัยของศาลฎีกา *</label>
+                <textarea id="caseRulingInput" class="textarea" placeholder="ระบุหลักกฎหมายและคำวินิจฉัย..." required></textarea>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="caseTakeawayInput">ข้อควรระวัง / บทเรียนสำหรับนิติบุคคล *</label>
+                <textarea id="caseTakeawayInput" class="textarea" placeholder="ระบุแนวทางป้องกันปัญหา..." required></textarea>
+              </div>
+              <p id="caseFormError" class="error-msg">กรุณากรอกข้อมูลให้ครบทุกช่อง</p>
+              <div style="display:flex; gap:8px;">
+                <button type="submit" class="btn btn-accent">บันทึกกรณีศึกษา</button>
+                <button type="button" class="btn btn-secondary" onclick="resetCaseForm()">ล้างฟอร์ม</button>
+              </div>
+            </form>
+          </div>
+
+          <div class="card">
+            <h3 style="margin-top:0;">รายการกรณีศึกษาคำพิพากษาศาลฎีกาทั้งหมด</h3>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>เลขฎีกา</th>
+                    <th>ประเด็น</th>
+                    <th>ชื่อกรณีศึกษา</th>
+                    <th>จัดการ</th>
+                  </tr>
+                </thead>
+                <tbody id="casesAdminTable"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== VIEW 5: FORUM ==================== -->
+    <section id="view-forum" class="tab-view hidden">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">💬 กระทู้ถาม-ตอบเพื่อแสดงความคิดเห็นและปรึกษาปัญหากฎหมายอาคารชุด</h2>
+          <p class="section-desc">พื้นที่แลกเปลี่ยนความคิดเห็นและรับความช่วยเหลือข้อพิพาททางกฎหมาย (ตั้งคำถามใหม่ หรือตอบกระทู้)</p>
+        </div>
+      </div>
+
+      <div class="forum-layout">
+        <div class="card">
+          <h3 style="margin-top:0;">ตั้งกระทู้ถาม-ตอบใหม่</h3>
+          <form id="threadForm" onsubmit="createThread(event)" novalidate>
+            <div class="form-group">
+              <label class="form-label" for="threadAuthorInput">ชื่อผู้ตั้งกระทู้ / บทบาท *</label>
+              <input type="text" id="threadAuthorInput" class="input" placeholder="เช่น คุณสมชาย (เจ้าของร่วม ชั้น 8)" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="threadCategoryInput">หมวดหมู่ประเด็น *</label>
+              <select id="threadCategoryInput" class="select" required>
+                <option value="ปรึกษาข้อกฎหมาย พ.ร.บ.อาคารชุด">ปรึกษาข้อกฎหมาย พ.ร.บ.อาคารชุด</option>
+                <option value="ปัญหาค่าส่วนกลางและใบปลอดหนี้">ปัญหาค่าส่วนกลางและใบปลอดหนี้</option>
+                <option value="ระเบียบการใช้ทรัพย์ส่วนกลาง">ระเบียบการใช้ทรัพย์ส่วนกลาง</option>
+                <option value="การประชุมใหญ่และคณะกรรมการ">การประชุมใหญ่และคณะกรรมการ</option>
+                <option value="เสนอแนะการบริหารอาคารชุด">เสนอแนะการบริหารอาคารชุด</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="threadTitleInput">หัวข้อกระทู้คำถาม *</label>
+              <input type="text" id="threadTitleInput" class="input" placeholder="ระบุประเด็นคำถามหรือหัวข้อที่ต้องการแลกเปลี่ยน..." required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="threadBodyInput">รายละเอียดคำถามหรือความคิดเห็น *</label>
+              <textarea id="threadBodyInput" class="textarea" placeholder="อธิบายข้อเท็จจริงหรือความคิดเห็นของคุณ..." required></textarea>
+            </div>
+            <p id="threadFormError" class="error-msg">กรุณากรอกข้อมูลกระทู้ให้ครบถ้วน</p>
+            <button type="submit" class="btn btn-primary" style="width:100%;">โพสต์กระทู้ถาม-ตอบ</button>
+          </form>
+        </div>
+
+        <div>
+          <div id="threadsContainer"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== VIEW 6: QUIZ ==================== -->
+    <section id="view-quiz" class="tab-view hidden">
+      <!-- FRONT-OFFICE QUIZ -->
+      <div id="quiz-front" class="quiz-container">
+        <div class="section-header">
+          <div>
+            <h2 class="section-title">🎯 แบบทดสอบ Quiz สุ่มคำถาม 10 ข้อตามมาตรา พ.ร.บ.อาคารชุด รายเดือน</h2>
+            <p class="section-desc">สุ่มหัวข้อคำถาม 10 ข้อเจาะลึกแต่ละมาตราของ พ.ร.บ. อาคารชุด สลับกันไปในแต่ละเดือน พร้อมการคิดเวลาและตารางสรุปคะแนน Ranking ประจำกลุ่ม!</p>
+          </div>
+        </div>
+
+        <!-- Step 1: Username and Monthly Section Entry -->
+        <div id="quizLobby" class="card quiz-lobby">
+          <h3 style="margin-top:0;font-size:22px;">✍️ ลงทะเบียนเพื่อเริ่มทำข้อสอบ</h3>
+          <p style="color:var(--muted);font-size:14.5px;margin-bottom:24px;">ระบบจะจับเวลาตั้งแต่ข้อแรกจนถึงข้อสุดท้าย และนำมาจัดอันดับความถูกต้องและความรวดเร็วในตาราง Ranking</p>
+
+          <div style="max-width:440px; margin:0 auto; text-align:left; background:var(--surface-alt); padding:24px; border-radius:12px; border:1px solid var(--border);">
+            <div class="form-group" style="margin-bottom:16px;">
+              <label class="form-label" for="quizParticipantName">ระบุชื่อเล่นหรือชื่อเต็มของคุณ *</label>
+              <input type="text" id="quizParticipantName" class="input" placeholder="เช่น คุณสมศักดิ์ นิติ 2025" required>
+            </div>
+
+            <div class="form-group" style="margin-bottom:20px;">
+              <label class="form-label" for="quizMonthSelect">เลือกชุดข้อสอบมาตราตามเดือนประจำปี (เวียนสลับมาตรา) *</label>
+              <select id="quizMonthSelect" class="select" onchange="updateQuizSectionHint()">
+                <option value="มกราคม" selected>มกราคม (เน้นมาตรา 18: ค่าส่วนกลาง)</option>
+                <option value="กุมภาพันธ์">กุมภาพันธ์ (เน้นมาตรา 18/1: เงินเพิ่มและเบี้ยปรับ)</option>
+                <option value="มีนาคม">มีนาคม (เน้นมาตรา 17/1: ห้ามประกอบการค้าในพื้นที่พักอาศัย)</option>
+                <option value="เมษายน">เมษายน (เน้นมาตรา 29: หนังสือรับรองการปลอดหนี้)</option>
+                <option value="พฤษภาคม">พฤษภาคม (เน้นมาตรา 41: บุริมสิทธิเหนือหนี้จำนอง)</option>
+                <option value="มิถุนายน">มิถุนายน (เน้นมาตรา 4: นิยามทรัพย์ส่วนบุคคล & ทรัพย์ส่วนกลาง)</option>
+                <option value="กรกฎาคม">กรกฎาคม (เน้นมาตรา 15: อุปกรณ์โครงสร้างที่เป็นส่วนกลาง)</option>
+                <option value="สิงหาคม">สิงหาคม (เน้นมาตรา 32: วัตถุประสงค์นิติบุคคลอาคารชุด)</option>
+                <option value="กันยายน">กันยายน (เน้นมาตรา 33: หน้าที่ผู้จัดการนิติบุคคล)</option>
+                <option value="ตุลาคม">ตุลาคม (เน้นมาตรา 35: การแต่งตั้งผู้แทน)</option>
+                <option value="พฤศจิกายน">พฤศจิกายน (เน้นมาตรา 48: มติการขึ้นค่าส่วนกลาง)</option>
+                <option value="ธันวาคม">ธันวาคม (เน้นมาตรา 65: อัตราโทษปรับคดีเปิดร้านค้า)</option>
+              </select>
+            </div>
+
+            <div style="background:var(--brand-soft); border-left:4px solid var(--brand); padding:12px; border-radius:0 8px 8px 0; margin-bottom:20px; font-size:13.5px; color:var(--brand);">
+              <strong>💡 ข้อมูลชุดข้อสอบประจำรอบเดือน:</strong> 
+              <span id="quizSectionHint">สุ่มคลังข้อสอบมาตรา 18 (ค่าใช้จ่ายส่วนกลางของนิติบุคคลอาคารชุด)</span>
+            </div>
+
+            <button type="button" class="btn btn-primary" style="width:100%;font-size:16px;" onclick="startQuizSession()">
+              🚀 เริ่มทำแบบทดสอบจับเวลา!
+            </button>
+          </div>
+        </div>
+
+        <!-- Step 2: Live Quiz Play Area -->
+        <div id="quizPlayArea" class="card hidden">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <span class="tag tag-amber" id="quizCurrentProgress">ข้อที่ 1 จาก 10</span>
+            <span style="font-size:14.5px; font-weight:700; color:var(--brand);" id="quizLiveTimer">เวลาที่ใช้: 0.00 วินาที</span>
+          </div>
+
+          <div class="quiz-timer-bar">
+            <div class="quiz-timer-fill" id="quizTimerBarFill" style="width: 0%;"></div>
+          </div>
+
+          <h3 id="quizQuestionText" style="margin:16px 0 20px 0; font-size:19px; line-height:1.5;">โจทย์กำลังโหลด...</h3>
+
+          <div id="quizOptionsList"></div>
+
+          <div id="quizFeedbackBox" class="quiz-feedback hidden">
+            <strong id="quizFeedbackTitle">เฉลย:</strong>
+            <p id="quizFeedbackText" style="margin:6px 0 0 0; font-size:14.5px;"></p>
+          </div>
+
+          <div style="margin-top:20px; text-align:right;">
+            <button type="button" id="quizNextBtn" class="btn btn-primary hidden" onclick="advanceQuizQuestion()">
+              ถัดไป →
+            </button>
+          </div>
+        </div>
+
+        <!-- Step 3: Leaderboard (Ranking) -->
+        <div class="card" style="margin-top:24px;">
+          <h3 style="margin-top:0; font-size:19px; display:flex; align-items:center; gap:8px;">🏆 ตารางจัดอันดับคะแนนสะสมสูงสุด (Ranking Leaderboard)</h3>
+          <p style="font-size:13.5px; color:var(--muted); margin-bottom:16px;">อัปเดตผลคะแนนเฉลี่ยและความเร็วในการทำข้อสอบของแต่ละคนโดยอัตโนมัติ</p>
+          
+          <div class="table-wrap">
+            <table class="leaderboard-table">
+              <thead>
+                <tr>
+                  <th style="width:60px; text-align:center;">อันดับ</th>
+                  <th>ชื่อผู้ทดสอบ</th>
+                  <th>คะแนนที่ได้</th>
+                  <th>เดือน / มาตราที่เลือก</th>
+                  <th>เวลาที่ใช้ทำ</th>
+                  <th>วันเวลาที่ทำ</th>
+                </tr>
+              </thead>
+              <tbody id="quizLeaderboardBody">
+                <!-- Will be rendered dynamically -->
+              </tbody>
+            </table>
+          </div>
+          <div style="margin-top:12px; text-align:right;">
+            <button type="button" class="btn btn-secondary btn-sm" onclick="clearLeaderboardData()">ล้างตารางคะแนนสะสม</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- BACK-OFFICE QUIZ CONFIGURATION -->
+      <div id="quiz-back" class="hidden">
+        <div class="section-header">
+          <div>
+            <h2 class="section-title">⚙️ จัดการคลังข้อสอบและสถิติคะแนน Quiz (Back-Office)</h2>
+            <p class="section-desc">เพิ่ม/แก้ไข/ลบคำถาม และกำหนดมาตรากฎหมายสุ่มรายเดือน</p>
+          </div>
+        </div>
+
+        <div class="admin-grid">
+          <div class="card">
+            <h3 id="quizFormHeading" style="margin-top:0;">เพิ่ม / ปรับปรุงคำถามในคลังข้อสอบ</h3>
+            <form id="quizForm" onsubmit="saveQuizItem(event)" novalidate>
+              <input type="hidden" id="quizEditId">
+              <div class="form-group">
+                <label class="form-label" for="quizQuestionInput">โจทย์คำถาม *</label>
+                <textarea id="quizQuestionInput" class="textarea" placeholder="ระบุโจทย์คำถามเกี่ยวกับพ.ร.บ.อาคารชุด..." required></textarea>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="quizTargetSectionSelect">มาตราที่จับคู่เพื่อใช้คัดเลือกคำถามรายเดือน *</label>
+                <select id="quizTargetSectionSelect" class="select" required>
+                  <option value="มาตรา 18">มาตรา 18 (ค่าส่วนกลางและการมีส่วนร่วม)</option>
+                  <option value="มาตรา 18/1">มาตรา 18/1 (เงินเพิ่มค้างจ่ายและบทลงโทษ)</option>
+                  <option value="มาตรา 17/1">มาตรา 17/1 (ข้อจำกัดการค้าเชิงพาณิชย์)</option>
+                  <option value="มาตรา 29">มาตรา 29 (หนังสือรับรองการปลอดหนี้)</option>
+                  <option value="มาตรา 41">มาตรา 41 (บุริมสิทธิและเจ้าพนักงานกรมที่ดิน)</option>
+                  <option value="มาตรา 4">มาตรา 4 (นิยามศัพท์ส่วนรวมและทรัพย์บุคคล)</option>
+                  <option value="มาตรา 15">มาตรา 15 (ทรัพย์ส่วนกลางลิฟต์ ระบบสาธารณูปโภค)</option>
+                  <option value="มาตรา 32">มาตรา 32 (การจัดตั้งนิติบุคคลและข้อบังคับ)</option>
+                  <option value="มาตรา 33">มาตรา 33 (วัตถุประสงค์และการดูแลโดยนิติบุคคล)</option>
+                  <option value="มาตรา 35">มาตรา 35 (การจดทะเบียนผู้บริหารอาคารชุด)</option>
+                  <option value="มาตรา 48">มาตรา 48 (คะแนนเสียงและมติที่ประชุมใหญ่)</option>
+                  <option value="มาตรา 65">มาตรา 65 (บทกำหนดโทษปรับทางคดี)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="quizOpt0">ตัวเลือก ก. *</label>
+                <input type="text" id="quizOpt0" class="input" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="quizOpt1">ตัวเลือก ข. *</label>
+                <input type="text" id="quizOpt1" class="input" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="quizOpt2">ตัวเลือก ค. *</label>
+                <input type="text" id="quizOpt2" class="input" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="quizOpt3">ตัวเลือก ง. *</label>
+                <input type="text" id="quizOpt3" class="input" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="quizAnswerSelect">ตัวเลือกที่ถูกต้อง *</label>
+                <select id="quizAnswerSelect" class="select" required>
+                  <option value="0">ตัวเลือก ก.</option>
+                  <option value="1">ตัวเลือก ข.</option>
+                  <option value="2">ตัวเลือก ค.</option>
+                  <option value="3">ตัวเลือก ง.</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="quizExpInput">คำอธิบายเฉลยละเอียดและมาตรากฎหมายอ้างอิง *</label>
+                <textarea id="quizExpInput" class="textarea" placeholder="อธิบายข้อเท็จจริง คดีอ้างอิง และเหตุผลที่ตอบข้อนี้เพื่อความน่าอ่าน..." required></textarea>
+              </div>
+              <p id="quizFormError" class="error-msg">กรุณากรอกข้อมูลข้อสอบให้ครบทุกช่อง</p>
+              <div style="display:flex; gap:8px;">
+                <button type="submit" class="btn btn-accent">บันทึกข้อสอบ</button>
+                <button type="button" class="btn btn-secondary" onclick="resetQuizForm()">ล้างฟอร์ม</button>
+              </div>
+            </form>
+          </div>
+
+          <div class="card">
+            <h3 style="margin-top:0;">รายการข้อสอบทั้งหมดในฐานข้อมูล</h3>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>กลุ่มมาตรา</th>
+                    <th>โจทย์คำถาม</th>
+                    <th>คำตอบที่ถูกต้อง</th>
+                    <th>จัดการ</th>
+                  </tr>
+                </thead>
+                <tbody id="quizAdminTable"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // =========================================================================
+    // STATE & GROUNDED REAL DATA (พ.ร.บ.อาคารชุด พ.ศ. 2522 แก้ไขเพิ่มเติม พ.ศ. 2551 & คำพิพากษาศาลฎีกา)
+    // =========================================================================
+    let currentMode = 'front'; // 'front' | 'back'
+    let currentTab = 'laws';   // 'laws' | 'ai' | 'faq' | 'cases' | 'forum' | 'quiz'
+    let isLoggedIn = false;    // Simple Back-office login state
+
+    // Admin Credentials (default credentials, updated dynamically in Back-Office Settings)
+    let adminUsername = 'admin';
+    let adminPassword = 'condolaw2025';
+
+    let lawsData = [
+      {
+        id: 'law-1',
+        section: 'มาตรา 4 และ มาตรา 15',
+        category: 'นิยามและกรรมสิทธิ์',
+        title: 'นิยามทรัพย์ส่วนบุคคล และทรัพย์ส่วนกลาง',
+        content: '“ทรัพย์ส่วนบุคคล” หมายความว่า ห้องชุด และหมายความรวมถึงสิ่งปลูกสร้างหรือที่ดินที่จัดไว้ให้เป็นของเจ้าของห้องชุดแต่ละราย ส่วน “ทรัพย์ส่วนกลาง” หมายความว่า ส่วนของอาคารชุดที่มิใช่ห้องชุด ที่ดินที่ตั้งอาคารชุด และที่ดินหรือทรัพย์สินอื่นที่มีไว้เพื่อใช้หรือเพื่อประโยชน์ร่วมกันสำหรับเจ้าของร่วม เช่น โครงสร้างอาคาร ลิฟต์ ทางเดิน สระว่ายน้ำ และระบบท่อรวม',
+        note: 'การจำแนกทรัพย์ส่วนบุคคลและทรัพย์ส่วนกลางมีความสำคัญต่อการกำหนดผู้รับผิดชอบค่าซ่อมแซมและขอบเขตอำนาจของนิติบุคคลอาคารชุด'
+      },
+      {
+        id: 'law-2',
+        section: 'มาตรา 6/1 และ มาตรา 6/2',
+        category: 'การโฆษณาและสัญญา',
+        title: 'ความผูกพันของโฆษณาขายห้องชุด และแบบสัญญาจะซื้อจะขายมาตรฐาน',
+        content: 'ผู้มีกรรมสิทธิ์ในที่ดินและอาคารที่โฆษณาขายห้องชุด ต้องเก็บสำเนาข้อความหรือภาพที่โฆษณาไว้ในสถานที่ทำการจนกว่าจะขายหมด และส่งสำเนาให้นิติบุคคลอาคารชุดจัดเก็บอย่างน้อย 1ชุด โดยให้ถือว่าข้อความหรือภาพโฆษณาเป็นส่วนหนึ่งของสัญญาจะซื้อจะขาย หากขัดแย้งกันให้ตีความไปในทางที่เป็นคุณแก่ผู้ซื้อ และสัญญาต้องทำตามแบบที่รัฐมนตรีประกาศกำหนด',
+        note: 'นิติบุคคลอาคารชุดมีหน้าที่เก็บรักษาสำเนาสื่อโฆษณาของโครงการเพื่อใช้ตรวจสอบว่าทรัพย์ส่วนกลางที่ส่งมอบตรงตามที่โฆษณาไว้หรือไม่'
+      },
+      {
+        id: 'law-3',
+        section: 'มาตรา 14',
+        category: 'นิยามและกรรมสิทธิ์',
+        title: 'อัตราส่วนกรรมสิทธิ์ในทรัพย์ส่วนกลาง',
+        content: 'กรรมสิทธิ์ส่วนที่เป็นของเจ้าของร่วมในทรัพย์ส่วนกลาง ให้เป็นไปตามอัตราส่วนระหว่างราคาofห้องชุดแต่ละห้องชุดกับราคารวมofห้องชุดทั้งหมดในขณะที่ขอจดทะเบียนอาคารชุดตามมาตรา 6 (ในกรณีแก้ไขเพิ่มเติม พ.ศ. 2551 คำนวณตามอัตราส่วนพื้นที่ห้องชุด)',
+        note: 'อัตราส่วนกรรมสิทธิ์ในทรัพย์ส่วนกลางเป็นฐานในการคำนวณคะแนนเสียงในการประชุมใหญ่ และการเฉลี่ยค่าใช้จ่ายส่วนกลาง'
+      },
+      {
+        id: 'law-4',
+        section: 'มาตรา 17/1 และ มาตรา 65',
+        category: 'การใช้ประโยชน์และค่าส่วนกลาง',
+        title: 'ข้อห้ามการประกอบการค้าในอาคารชุดและบทกำหนดโทษ',
+        content: 'ในกรณีที่มีการจัดพื้นที่ของอาคารชุดเพื่อประกอบการค้า ต้องจัดระบบการเข้าออก in พื้นที่ดังกล่าวเป็นการเฉพาะไม่ให้รบกวนความเป็นอยู่โดยปกติสุขของเจ้าของร่วม ห้ามผู้ใดประกอบการค้า in อาคารชุด เว้นแต่เป็นการประกอบการค้าในพื้นที่ที่จัดไว้ตามวรรคหนึ่ง ผู้ฝ่าฝืนมีโทษตามมาตรา 65 ปรับไม่เกิน 50,000 บาท และปรับอีกไม่เกินวันละ 5,000 บาท ตลอดเวลาที่ฝ่าฝืน',
+        note: 'แม้ที่ประชุมใหญ่จะมีมติอนุญาตให้นำพื้นที่ทรัพย์ส่วนกลางไปเปิดร้านค้า ก็ไม่สามารถกระทำได้หากไม่ใช่พื้นที่พาณิชย์ที่จดทะเบียนจัดไว้แต่แรก (อ้างอิงฎีกาที่ 3615/2566)'
+      },
+      {
+        id: 'law-5',
+        section: 'มาตรา 18',
+        category: 'การใช้ประโยชน์และค่าส่วนกลาง',
+        title: 'หน้าที่ของเจ้าของร่วมในการชำระค่าภาษีอากรและค่าใช้จ่ายส่วนกลาง',
+        content: 'เจ้าของร่วมต้องร่วมกันออกค่าภาษีอากรและค่าใช้จ่ายที่เกิดจากการให้บริการส่วนรวม เครื่องมือเครื่องใช้ และค่าใช้จ่ายที่เกิดจากการดูแลรักษาและการดำเนินการเกี่ยวกับทรัพย์ส่วนกลาง ตามอัตราส่วนที่เจ้าของร่วมแต่ละคนมีกรรมสิทธิ์ในทรัพย์ส่วนกลาง หรือตามส่วนแห่งประโยชน์ที่มีต่อห้องชุดตามที่กำหนดในข้อบังคับ โดยผู้มีกรรมสิทธิ์ในที่ดินและอาคาร (เจ้าของโครงการ) ต้องเป็นเจ้าของร่วม in ห้องชุดที่ยังไม่มีการโอนกรรมสิทธิ์ด้วย',
+        note: 'หนี้ค่าส่วนกลางเป็นหนี้ตามกฎหมาย ไม่ใช่สัญญาต่างตอบแทน เจ้าของร่วมจะอ้างว่านิติบุคคลดูแลบกพร่องเพื่อปฏิเสธไม่จ่ายค่าส่วนกลางไม่ได้ (อ้างอิงฎีกาที่ 10059/2555)'
+      },
+      {
+        id: 'law-6',
+        section: 'มาตรา 18/1',
+        category: 'การใช้ประโยชน์และค่าส่วนกลาง',
+        title: 'เงินเพิ่มและมาตรการกรณีค้างชำระค่าส่วนกลาง',
+        content: 'กรณีเจ้าของร่วมไม่ชำระเงินตามมาตรา 18 ภายในกำหนด ต้องเสียเงินเพิ่มในอัตราไม่เกินร้อยละ 12 ต่อปีของจำนวนเงินที่ค้างชำระโดยไม่คิดทบต้น และหากค้างชำระตั้งแต่ 6 เดือนขึ้นไป ต้องเสียเงินเพิ่มในอัตราไม่เกินร้อยละ 20 ต่อปี และอาจถูกระงับการให้บริการส่วนรวมหรือการใช้ทรัพย์ส่วนกลางตามที่กำหนดในข้อบังคับ รวมทั้งไม่มีสิทธิออกเสียงในการประชุมใหญ่',
+        note: 'อัตราเงินเพิ่มและการระงับการใช้ทรัพย์ส่วนกลางต้องระบุไว้ในข้อบังคับนิติบุคคลอาคารชุดที่จดทะเบียนต่อพนักงานเจ้าหน้าที่แล้วเท่านั้น'
+      },
+      {
+        id: 'law-7',
+        section: 'มาตรา 29 และ มาตรา 41',
+        category: 'ใบปลอดหนี้และบุริมสิทธิ',
+        title: 'หนังสือรับรองการปลอดหนี้ และบุริมสิทธิเหนือหนี้จำนอง',
+        content: 'มาตรา 29 กำหนดให้พนักงานเจ้าหน้าที่รับจดทะเบียนสิทธิและนิติกรรมโอนกรรมสิทธิ์ห้องชุดได้เมื่อมีหนังสือรับรองการปลอดหนี้จากนิติบุคคลอาคารชุดมาแสดง ส่วนมาตรา 41 กำหนดให้นิติบุคคลอาคารชุดมีบุริมสิทธิเกี่ยวกับค่าใช้จ่ายตามมาตรา 18 เหนือทรัพย์ส่วนบุคคลของเจ้าของห้องชุด และหากผู้จัดการได้ส่งรายการหนี้ต่อพนักงานเจ้าหน้าที่แล้ว ให้ถือว่าอยู่ในลำดับก่อนจำนอง',
+        note: 'ผู้จัดการนิติบุคคลต้องส่งรายการหนี้ค้างชำระต่อเจ้าพนักงานที่ดินตามมาตรา 41 วรรคท้าย เพื่อให้หนี้ค่าส่วนกลางมีบุริมสิทธิได้รับชำระก่อนเจ้าหนี้จำนอง'
+      },
+      {
+        id: 'law-8',
+        section: 'มาตรา 32, 33, 35 และ 36',
+        category: 'นิติบุคคลและการประชุม',
+        title: 'ฐานะของนิติบุคคลอาคารชุด ข้อบังคับ และอำนาจหน้าที่ของผู้จัดการ',
+        content: 'นิติบุคคลอาคารชุดมีวัตถุประสงค์เพื่อจัดการและดูแลรักษาทรัพย์ส่วนกลาง โดยมีผู้จัดการเป็นผู้แทนของนิติบุคคลอาคารชุด มีอำนาจหน้าที่ปฏิบัติตามวัตถุประสงค์ ข้อบังคับ หรือมติที่ประชุมใหญ่ สั่งการกรณีจำเป็นและรีบด่วนเกี่ยวกับความปลอดภัยของอาคาร และดูแลความสงบเรียบร้อย ทั้งนี้ การแก้ไขหรือเพิ่มเติมข้อบังคับต้องทำโดยมติที่ประชุมใหญ่และนำไปจดทะเบียนต่อพนักงานเจ้าหน้าที่ภายใน 30 วัน',
+        note: 'ผู้จัดการนิติบุคคลสามารถมอบอำนาจให้ทนายความหรือบุคคลอื่นฟ้องคดีเรียกค่าส่วนกลางแทนนิติบุคคลได้ (อ้างอิงฎีกาที่ 1872/2549)'
+      },
+      {
+        id: 'law-9',
+        section: 'มาตรา 48',
+        category: 'นิติบุคคลและการประชุม',
+        title: 'มติที่ประชุมใหญ่ในเรื่องสำคัญ (คะแนนเสียงไม่น้อยกว่ากึ่งหนึ่ง)',
+        content: 'มติเกี่ยวกับเรื่องสำคัญ เช่น การอนุญาตให้ทำการก่อสร้างตกแต่งที่มีผลต่อทรัพย์ส่วนกลางหรือลักษณะภายนอกของอาคาร การแต่งตั้งหรือถอดถอนผู้จัดการ การกำหนดกิจการที่ผู้จัดการมีอำนาจมอบหมายให้ผู้อื่นทำแทน หรือการแก้ไขเปลี่ยนแปลงอัตราส่วนค่าใช้จ่ายส่วนกลางในข้อบังคับ ต้องได้รับคะแนนเสียงไม่น้อยกว่ากึ่งหนึ่งของจำนวนคะแนนเสียงของเจ้าของร่วมทั้งหมด',
+        note: 'การปรับขึ้นอัตราค่าส่วนกลางต้องได้รับมติที่ประชุมใหญ่ด้วยคะแนนเสียงไม่น้อยกว่ากึ่งหนึ่งของคะแนนเสียงเจ้าของร่วมทั้งหมด (อ้างอิงฎีกาที่ 8898/2559)'
+      },
+      {
+        id: 'law-10',
+        section: 'พ.ร.บ. ควบคุมอาคาร พ.ศ. 2522 (มาตรา 32 ทวิ)',
+        category: 'กฎหมายอื่นที่เกี่ยวข้อง',
+        title: 'การตรวจสอบความปลอดภัยของอาคารชุดสูงหรือขนาดใหญ่พิเศษประจำปี',
+        content: 'กำหนดให้อาคารชุดที่มีความสูงตั้งแต่ 23 เมตรขึ้นไป หรือมีพื้นที่อาคารรวมตั้งแต่ 10,000 ตารางเมตรขึ้นไป ต้องจัดให้มีผู้ตรวจสอบอาคารที่ได้รับอนุญาตทำการตรวจสอบสภาพอาคารและระบบความปลอดภัยด้านวิศวกรรม/สถาปัตยกรรม และส่งรายงานผลต่อเจ้าพนักงานท้องถิ่นทุกปี เพื่อการันตีความปลอดภัยของผู้พักอาศัย',
+        note: 'นิติบุคคลอาคารชุดมีหน้าที่ตามกฎหมายในการจัดหาผู้ตรวจสอบอาคารและส่งรายงาน หากฝ่าฝืนมีโทษปรับทางอาญา และอาจส่งผลต่อการเคลมประกันภัยตึก'
+      },
+      {
+        id: 'law-11',
+        section: 'พ.ร.บ. การทวงถามหนี้ พ.ศ. 2558 (มาตรา 9 และ มาตรา 11)',
+        category: 'กฎหมายอื่นที่เกี่ยวข้อง',
+        title: 'ข้อจำกัดในการทวงถามหนี้ค่าส่วนกลางและการเปิดเผยข้อมูลค้างชำระ',
+        content: 'ห้ามมิให้ทวงถามหนี้กับบุคคลอื่นที่ไม่ใช่ลูกหนี้ (ยกเว้นผู้ที่ลูกหนี้ระบุไว้) ห้ามทวงถามหนี้เกินวันละ 1 ครั้ง และห้ามเปิดเผยข้อมูลการค้างชำระค่าส่วนกลางแก่บุคคลภายนอกในลักษณะประจานหรือละเมิดสิทธิ์ของลูกหนี้โดยไม่จำเป็นตามกฎหมายคุ้มครองข้อมูลส่วนบุคคล',
+        note: 'การติดประกาศรายชื่อลูกหนี้ค้างชำระค่าส่วนกลางที่บอร์ดประชาสัมพันธ์ส่วนรวม ต้องกระทำด้วยความระมัดระวังเป็นเพียงข้อมูลแถลงการดำเนินงาน ไม่ระบุข้อความแฝงประจานเกินความจำเป็นตามเกณฑ์'
+      },
+      {
+        id: 'law-12',
+        section: 'พ.ร.บ. คุ้มครองผู้บริโภค พ.ศ. 2522 (มาตรา 35 ทวิ)',
+        category: 'กฎหมายอื่นที่เกี่ยวข้อง',
+        title: 'การควบคุมแบบสัญญาจะซื้อจะขายห้องชุดมาตรฐานของโครงการ',
+        content: 'กำหนดให้ธุรกิจขายห้องชุดในอาคารชุดเป็นธุรกิจที่ควบคุมสัญญา โดยสัญญาจะซื้อจะขายจะต้องใช้ข้อความมาตรฐานตามที่คณะกรรมการคุ้มครองผู้บริโภค (สคบ.) กำหนด และห้ามระบุข้อสัญญาเอาเปรียบผู้บริโภคจนขาดความเป็นธรรม',
+        note: 'หากผู้จัดสรรระบุเงื่อนไขที่เอาเปรียบหรือขัดกับสัญญามาตรฐานของ สคบ. ให้ถือว่าข้อสัญญานั้นไม่มีผลใช้บังคับตามกฎหมาย และผู้บริโภคมีสิทธิ์ฟ้องร้องเรียกร้องสิทธิ์ได้'
+      },
+      {
+        id: 'law-13',
+        section: 'พ.ร.บ. การสาธารณสุข พ.ศ. 2535 (มาตรา 25 และ 26)',
+        category: 'กฎหมายอื่นที่เกี่ยวข้อง',
+        title: 'การจัดการเหตุเดือดร้อนรำคาญ (เสียงดัง กลิ่น ควัน ฝุ่น) ในอาคารชุด',
+        content: 'กรณีการกระทำใดๆ ในห้องชุดหรือพื้นที่ส่วนกลางที่ก่อให้เกิดกลิ่น เสียง ความร้อน ฝุ่นละออง หรือควัน จนส่งผลกระทบต่อความเป็นอยู่อย่างปกติสุขของเจ้าของร่วมรายอื่น ถือเป็นเหตุเดือดร้อนรำคาญ นิติบุคคลมีสิทธิ์ตาม พ.ร.บ. สาธารณสุข ในการขอให้ระงับ หรือประสานงานแจ้งเจ้าพนักงานท้องถิ่นออกคำสั่งปรับบังคับ',
+        note: 'นิติบุคคลสามารถออกระเบียบการตกแต่งซ่อมแซมห้องชุดเพื่อควบคุมเวลาและเสียงดังในการทำงานไม่ให้รบกวนตามเกณฑ์กฎหมายสาธารณสุขได้โดยชอบ'
+      }
+    ];
+
+    let govAgencies = [
+      {
+        name: '🏢 กรมที่ดิน (Department of Lands) / สำนักงานที่ดินจังหวัดและสาขา',
+        role: 'รับจดทะเบียนจัดตั้งอาคารชุด, จดจดทะเบียนนิติบุคคลอาคารชุด, จดทะเบียนแต่งตั้งผู้จัดการนิติบุคคลอาคารชุด, บันทึกข้อบังคับที่แก้ไขเพิ่มเติม, ตรวจหลักฐานกรรมสิทธิ์ห้องชุด และควบคุมหนังสือปลอดหนี้ in ขั้นโอนกรรมสิทธิ์',
+        contact: 'สายด่วนกรมที่ดิน 1301 | เว็บไซต์: www.dol.go.th',
+        advice: 'เมื่อนิติบุคคลมีการแก้ไขเปลี่ยนแปลงข้อบังคับ หรือแต่งตั้งผู้จัดการนิติบุคคลใหม่ ต้องนำมติที่ประชุมใหญ่ไปจดทะเบียนต่อพนักงานเจ้าหน้าที่ ณ สำนักงานที่ดินในท้องที่ภายใน 30 วัน'
+      },
+      {
+        name: '🏛️ สำนักงานเขต (กรุงเทพฯ) / เทศบาล / อบต. ท้องถิ่น',
+        role: 'ฝ่ายโยธาและฝ่ายสิ่งแวดล้อม: ออกใบรับรองการก่อสร้างอาคารชุด (อ.6) ตาม พ.ร.บ.ควบคุมอาคาร, ตรวจสอบและรับรายงานการตรวจสอบความปลอดภัยของอาคารประจำปี, ควบคุมการกำจัดขยะและสิ่งแวดล้อมสุขาภิบาล',
+        contact: 'เบอร์ติดต่อสำนักงานเขตท้องที่ หรือ สายด่วน กทม. 1555',
+        advice: 'นิติบุคคลอาคารชุดที่มีความสูงตั้งแต่ 23 เมตรขึ้นไป หรือมีพื้นที่อาคารรวมตั้งแต่ 10,000 ตารางเมตรขึ้นไป มีหน้าที่ตามกฎหมายจัดให้มีการตรวจสอบสภาพอาคารโดยผู้ตรวจสอบอาคารที่ได้รับอนุญาตและส่งรายงานต่อเจ้าพนักงานท้องถิ่นทุกปี'
+      },
+      {
+        name: '⚖️ กรมบังคับคดี (Legal Execution Department) / สำนักงานบังคับคดีแพ่ง',
+        role: 'ดำเนินการยึดทรัพย์ บังคับคดี และนำห้องชุดของผู้ค้างชำระค่าส่วนกลางออกขายทอดตลาดตามคำพิพากษาของศาล เพื่อนำเงินมาชำระหนี้ค้างรวมถึงเบี้ยปรับค้างชำระ',
+        contact: 'สายด่วนกรมบังคับคดี 1111 ต่อ 79 | เว็บไซต์: www.led.go.th',
+        advice: 'เมื่อนิติบุคคลอาคารชุดทราบข่าวการยึดทรัพย์ขายทอดตลาดของห้องชุดที่มีหนี้ค้าง นิติบุคคลต้องรีบยื่นคำร้องขอกันส่วนเงินชำระหนี้บุริมสิทธิค่าใช้จ่ายส่วนกลาง (ตามมาตรา 41 พ.ร.บ.อาคารชุด) ก่อนเจ้าหนี้จำนองทันที'
+      },
+      {
+        name: '🛡️ สำนักงานคณะกรรมการคุ้มครองผู้บริโภค (สคบ.)',
+        role: 'กำกับดูแลแบบสัญญาจะซื้อจะขายห้องชุดมาตรฐานของผู้พัฒนาโครงการ, ตรวจสอบการโฆษณาขายที่เกินจริง, และรับเรื่องร้องเรียนร้องทุกข์จากผู้บริโภคกรณีชำรุดบกพร่องหรือจัดสรรทรัพย์ส่วนกลางไม่ตรงโฆษณา',
+        contact: 'สายด่วน OCPB 1166 | เว็บไซต์: www.ocpb.go.th',
+        advice: 'โบรชัวร์ สื่อโฆษณา และคำพรรณนาของผู้ประกอบการ ถือเป็นส่วนหนึ่งของสัญญาจะซื้อจะขายห้องชุดตามมาตรา 6/1 นิติบุคคลสามารถใช้หลักฐานนี้เรียกร้องให้ผู้จัดสรรส่งมอบทรัพย์ส่วนกลางตามโฆษณาได้'
+      },
+      {
+        name: '⚖️ สภาทนายความในพระบรมราชูปถัมภ์ (Lawyers Council of Thailand)',
+        role: 'ออกและตรวจสอบใบอนุญาตประกอบวิชาชีพทนายความ, ยื่นข้อเรียกร้องหรือควบคุมมรรยาททนายความกรณีมีข้อพิพาทเกี่ยวกับคดีความของอาคารชุด, และให้บริการทนายความอาสาช่วยเหลือประชาชน',
+        contact: 'สายด่วนสภาทนายความ 1167 | เว็บไซต์สำหรับการตรวจสอบรายชื่อ: <a href="https://search.lawyerscouncil.or.th" target="_blank" rel="noopener">search.lawyerscouncil.or.th</a>',
+        advice: 'ก่อนนิติบุคคลจะมอบอำนาจให้ทนายความฟ้องคดีไล่เบี้ยหนี้ค่าส่วนกลางค้างจ่าย ควรนำชื่อ-นามสกุลมาตรวจสอบใบประกอบวิชาชีพผ่านลิงก์อย่างเป็นทางการเพื่อความปลอดภัยสูงสุด'
+      },
+      {
+        name: '🏛️ ศาลยุติธรรม (ศาลแพ่ง / ศาลจังหวัดท้องที่)',
+        role: 'พิจารณาและพิพากษาคดีแพ่งสามัญ คดีผู้บริโภค หรือคดีมโนสาเร่ กรณีที่นิติบุคคลอาคารชุดยื่นฟ้องร้องขับไล่ หรือฟ้องเรียกชำระหนี้ค่าส่วนกลางค้างชำระและเงินเพิ่มจากเจ้าของร่วม',
+        contact: 'เบอร์ติดต่อศาลประจำท้องที่ | เว็บไซต์: www.coj.go.th',
+        advice: 'การฟ้องคดีเรียกหนี้ค่าส่วนกลางนิติบุคคลควรฟ้องคดีภายในกำหนดอายุความ 5 ปีนับแต่งวดที่ค้างชำระแต่ละงวด เพื่อหลีกเลี่ยงข้อโต้แย้งเรื่องขาดอายุความในชั้นศาล'
+      }
+    ];
+
+    let casesData = [
+      {
+        id: 'case-1',
+        dika: 'คำพิพากษาศาลฎีกาที่ 2081/2567',
+        topic: 'หนี้ค่าส่วนกลางและเบี้ยปรับ',
+        title: 'การขอรับชำระหนี้ค่าส่วนกลางและเงินเพิ่มจากการขายทอดตลาด แม้ค้างชำระเกิน 5 ปี',
+        facts: 'นิติบุคคลอาคารชุดยื่นคำร้องขอให้ชำระหนี้ค่าใช้จ่ายส่วนกลางและเงินเพิ่มตามมาตรา 18 วรรคสอง เพื่อการออกหนังสือรับรองการปลอดหนี้ จากเงินที่ได้จากการขายทอดตลาดห้องชุดพิพาท 3 ห้อง โดยฝ่ายผู้คัดค้านโต้แย้งว่าหนี้ค่าส่วนกลางบางส่วนค้างชำระเกิน 5 ปี ขาดอายุความแล้ว',
+        ruling: 'แม้หนี้ค่าใช้จ่ายส่วนกลางจะมีอายุความ 5 ปี ตาม ป.พ.พ. มาตรา 193/33 (4) แต่หนี้ที่ค้างเกิน 5 ปีก็ยังไม่ระงับสิ้นไปตาม ป.พ.พ. มาตรา 193/10 ประกอบกับในการโอนกรรมสิทธิ์ห้องชุดตาม พ.ร.บ.อาคารชุด มาตรา 29 วรรคสอง นิติบุคคลต้องได้รับชำระหนี้ค่าส่วนกลางครบถ้วนแล้ว ผู้คัดค้านจึงไม่อาจอ้างเหตุขาดอายุความเพื่อปฏิเสธการชำระหนี้ค่าส่วนกลางและเงินเพิ่มส่วนที่ย้อนหลังเกิน 5 ปีจากเงินขายทอดตลาดได้',
+        takeaway: 'นิติบุคคลอาคารชุดต้องรักษาสิทธิด้วยการแจ้งรายการหนี้ต่อพนักงานเจ้าหน้าที่และยื่นขอรับชำระหนี้บุริมสิทธิในชั้นบังคับคดีขายทอดตลาดอย่างครบถ้วน'
+      },
+      {
+        id: 'case-2',
+        dika: 'คำพิพากษาศาลฎีกาที่ 3615/2566',
+        topic: 'การนำทรัพย์ส่วนกลางไปประกอบการค้า',
+        title: 'นำพื้นที่ทรัพย์ส่วนกลางไปก่อสร้างร้านกาแฟและร้านค้า ฝ่าฝืนมาตรา 17/1 แม้มีมติที่ประชุมใหญ่',
+        facts: 'เจ้าของร่วมรายหนึ่งนำพื้นที่ทรัพย์ส่วนกลางของนิติบุคคลอาคารชุดไปก่อสร้างเป็นร้านกาแฟ ร้านตัดผม และร้านสปา โดยอ้างว่าได้รับมติอนุมัติจากที่ประชุมใหญ่ของเจ้าของร่วมแล้ว เจ้าของร่วมอีกรายจึงฟ้องร้องดำเนินคดี',
+        ruling: 'เมื่อการก่อสร้างร้านค้าดังกล่าวเกิดขึ้นภายหลัง พ.ร.บ.อาคารชุด (ฉบับที่ 4) พ.ศ. 2551 ใช้บังคับ และไม่ใช่พื้นที่ที่จัดไว้เพื่อประกอบการค้าตั้งแต่จดทะเบียนอาคารชุด จึงเป็นการฝ่าฝืนมาตรา 17/1 วรรคสอง มีความผิดตามมาตรา 65 พิพากษาปรับ 50,000 บาท และปรับอีกวันละ 5,000 บาท ตลอดเวลาที่ฝ่าฝืน',
+        takeaway: 'มติที่ประชุมใหญ่ไม่สามารถอนุมัติให้กระทำการที่ขัดต่อบทบัญญัติแห่งกฎหมาย (มาตรา 17/1) ได้ คณะกรรมการและผู้จัดการต้องตรวจสอบความชอบด้วยกฎหมายก่อนอนุญาตใช้พื้นที่ส่วนกลางเสมอ'
+      },
+      {
+        id: 'case-3',
+        dika: 'คำพิพากษาศาลฎีกาที่ 2575/2562 และ 13225/2553',
+        topic: 'ความรับผิดของนิติบุคคลและผู้จัดสรร',
+        title: 'เจ้าของโครงการ (ผู้จัดสรร) ต้องจ่ายค่าส่วนกลางสำหรับห้องชุดที่ยังไม่ได้โอนขาย จะออกข้อบังคับยกเว้นให้ตนเองไม่ได้',
+        facts: 'บริษัทเจ้าของโครงการอาคารชุดถือกกรรมสิทธิ์ห้องชุดที่ยังขายไม่หมดและไม่ยอมชำระค่าส่วนกลาง โดยอ้างข้อบังคับที่เขียนยกเว้นให้ห้องชุดของเจ้าของโครงการไม่ต้องเฉลี่ยค่าใช้จ่ายส่วนกลาง',
+        ruling: 'บริษัทเจ้าของโครงการซึ่งถือกกรรมสิทธิ์ห้องชุดที่ยังไม่ได้โอนให้บุคคลอื่น ถือเป็นเจ้าของร่วมตามมาตรา 4 และมาตรา 18 มีหน้าที่ต้องร่วมออกค่าใช้จ่ายส่วนกลางนับแต่วันจดทะเบียนนิติบุคคลอาคารชุด การออกข้อบังคับยกเว้นให้เจ้าของโครงการไม่ต้องจ่ายค่าส่วนกลางขัดต่อเจตนารมณ์ของ พ.ร.บ.อาคารชุด ไม่มีผลใช้บังคับ',
+        takeaway: 'ผู้จัดการนิติบุคคลมีหน้าที่เรียกเก็บค่าส่วนกลางจากเจ้าของโครงการสำหรับห้องชุดที่ยังไม่โอนกรรมสิทธิ์ทุกห้องอย่างเท่าเทียมกับเจ้าของร่วมรายอื่น'
+      },
+      {
+        id: 'case-4',
+        dika: 'คำพิพากษาศาลฎีกาที่ 1013/2550 และ 10230/2553',
+        topic: 'การระงับใช้ทรัพย์ส่วนกลางและที่จอดรถ',
+        title: 'นิติบุคคลไม่ออกสติกเกอร์จอดรถเพื่อบีบบังคับให้จ่ายค่าส่วนกลาง กรณีที่จอดรถเป็นทรัพย์ส่วนบุคคล ถือเป็นละเมิด',
+        facts: 'นิติบุคคลอาคารชุดออกระเบียบไม่ให้สติกเกอร์ผ่านเข้าอาคารจอดรถแก่เจ้าของร่วมที่ค้างชำระค่าส่วนกลางเกิน 6 เดือน ทั้งที่เจ้าของร่วมรายดังกล่าวมีสิทธิในที่จอดรถที่ระบุไว้ในหนังสิทธิ์ห้องชุด',
+        ruling: 'หนี้ค่าส่วนกลางเป็นหนี้เงินตามกฎหมายที่นิติบุคคลต้องใช้สิทธิฟ้องร้องบังคับคดีทางศาล การออกระเบียบกีดขวางไม่ให้เจ้าของร่วมเข้าใช้ที่จอดรถซึ่งเป็นสิทธิของตนเพื่อบีบบังคับให้ชำระหนี้ จึงเป็นการหลีกเลี่ยงไม่ใช้สิทธิทางศาลและเป็นการทำละเมิดต่อเจ้าของร่วม',
+        takeaway: 'การบังคับชำระหนี้ค่าส่วนกลางต้องทำตามกรอบมาตรา 18/1 (ระงับเฉพาะบริการส่วนรวมตามที่กำหนดในข้อบังคับ) และใช้สิทธิฟ้องคดีทางศาล ห้ามกระทำการละเมิดทรัพย์ส่วนบุคคล'
+      },
+      {
+        id: 'case-5',
+        dika: 'คำพิพากษาศาลฎีกาที่ 4493/2543',
+        topic: 'ความรับผิดของนิติบุคคลและผู้จัดสรร',
+        title: 'ท่อระบายน้ำส่วนกลางอุดตันทำให้น้ำท่วมห้องชุด นิติบุคคลต้องรับผิดแม้จ้างบริษัทเอกชนดูแลแล้ว',
+        facts: 'ท่อรวมรับน้ำฝนซึ่งเป็นทรัพย์ส่วนกลางของอาคารชุดเกิดอุดตัน ทำให้น้ำเอ่อล้นเข้าท่วมห้องชุดของเจ้าของร่วมได้รับความเสียหาย นิติบุคคลอาคารชุดปฏิเสธความรับผิดโดยอ้างว่าได้จ้างบริษัทบริหารอาคารเข้ามาดูแลแล้ว',
+        ruling: 'ทั้งกฎหมายและข้อบังคับกำหนดให้เป็นหน้าที่ของนิติบุคคลอาคารชุดในการดูแลรักษาทรัพย์ส่วนกลาง เมื่อท่อรวมรับน้ำอุดตันจนก่อให้เกิดความเสียหายแก่ห้องชุดของเจ้าของร่วม แม้จะว่าจ้างบริษัทเข้ามาดูแลก็ถือว่านิติบุคคลละเลยในการกำกับดูแล ต้องรับผิดชดใช้ค่าเสียหายให้แก่เจ้าของร่วม',
+        takeaway: 'นิติบุคคลต้องจัดทำแผนบำรุงรักษาเชิงป้องกัน (Preventive Maintenance) สำหรับระบบท่อและทรัพย์ส่วนกลางอย่างสม่ำเสมอ'
+      },
+      {
+        id: 'case-6',
+        dika: 'คำพิพากษาศาลฎีกาที่ 8898/2559 และ 1872/2549',
+        topic: 'การประชุมใหญ่และอำนาจผู้จัดการ',
+        title: 'อำนาจผู้จัดการในการออกหนังสือเชิญประชุมใหญ่ การลงมติขึ้นค่าส่วนกลาง และการมอบอำนาจฟ้องคดี',
+        facts: 'เจ้าของร่วมฟ้องขอให้เพิกถอนมติที่ประชุมใหญ่ที่ปรับขึ้นค่าส่วนกลาง โดยอ้างว่าผู้จัดการเป็นผู้ออกหนังสือเชิญประชุมตามที่คณะกรรมการมอบหมาย และจัดประชุมเกิน 120 วันนับแต่วันสิ้นปีบัญชี รวมถึงโต้แย้งอำนาจการมอบอำนาจฟ้องคดีของผู้จัดการ',
+        ruling: 'คณะกรรมการมอบอำนาจให้ผู้จัดการออกหนังสือเชิญประชุมใหญ่ได้ไม่ขัดต่อกฎหมาย และเมื่อที่ประชุมใหญ่มีมติปรับขึ้นค่าใช้จ่ายส่วนกลางด้วยคะแนนเสียงไม่น้อยกว่ากึ่งหนึ่งของคะแนนเสียงเจ้าของร่วมทั้งหมดตามมาตรา 48 (5) มตินั้นจึงชอบด้วยกฎหมาย นอกจากนี้ ผู้จัดการในฐานะผู้แทนนิติบุคคลตามมาตรา 35 และ 36 มีอำนาจมอบอำนาจให้ทนายความฟ้องคดีแทนนิติบุคคลได้',
+        takeaway: 'การขอมติปรับขึ้นค่าส่วนกลางต้องตรวจสอบองค์ประชุมและคะแนนเสียงให้ไม่น้อยกว่ากึ่งหนึ่งของคะแนนเสียงเจ้าของร่วมทั้งหมดตามมาตรา 48'
+      },
+      {
+        id: 'case-7',
+        dika: 'คำพิพากษาศาลฎีกาที่ 9528/2557 และ 1735/2551',
+        topic: 'หนี้ค่าส่วนกลางและเบี้ยปรับ',
+        title: 'หนี้ค่าใช้จ่ายส่วนกลางของอาคารชุดรวมเบี้ยปรับ มีอายุความฟ้องร้องเรียกเก็บ 5 ปี',
+        facts: 'นิติบุคคลอาคารชุดยื่นฟ้องทวงหนี้ค่าส่วนกลางและเงินเพิ่มย้อนหลังเกินกว่า 5 ปี โดยเจ้าของร่วมให้การต่อสู้ขอปฏิเสธเนื่องจากเห็นว่าหนี้บางส่วนขาดอายุความแล้ว',
+        ruling: 'พระราชบัญญัติอาคารชุดไม่ได้กำหนดอายุความสิทธิเรียกร้องหนี้ค่าส่วนกลางไว้โดยเฉพาะ จึงต้องบังคับตาม ป.พ.พ. มาตรา 193/33 (4) ซึ่งกำหนดให้หนี้เงินค้างชำระรายเดือนมีอายุความ 5 ปี หนี้ประธาน (ค่าส่วนกลาง) และหนี้อุปกรณ์ (เบี้ยปรับ/เงินเพิ่ม) จึงขาดอายุความหากเรียกเก็บเกิน 5 ปีย้อนหลังนับจากวันยื่นฟ้องร้อง',
+        takeaway: 'ผู้จัดการนิติบุคคลต้องสอดส่องดูแลและยื่นฟ้องขับไล่หรือฟ้องทวงหนี้ภายในกำหนดเวลา 5 ปี นับจากวันที่ผิดนัดชำระของงวดแต่ละงวด'
+      },
+      {
+        id: 'case-8',
+        dika: 'คำพิพากษาศาลฎีกาที่ 7240/2544',
+        topic: 'หนี้ค่าส่วนกลางและเบี้ยปรับ',
+        title: 'การเรียกเบี้ยปรับหรือเบี้ยล่าช้าในข้อบังคับนิติบุคคลที่สูงเกินส่วน ศาลมีอำนาจปรับลดลงได้',
+        facts: 'ข้อบังคับของนิติบุคคลอาคารชุดกำหนดปรับกรณีเจ้าของร่วมชำระเงินค่าส่วนกลางล่าช้าในอัตราร้อยละ 10 ต่อเดือน (ร้อยละ 120 ต่อปี) จำเลยต่อสู้ว่าสูงเกินส่วนเกินไป',
+        ruling: 'ค่าปรับหรือเบี้ยปรับตามข้อบังคับนิติบุคคลอาคารชุดที่จัดทำขึ้นล่วงหน้า มีลักษณะทางนิติกรรมเป็นเบี้ยปรับตาม ป.พ.พ. เมื่อเจ้าของร่วมผิดนัดไม่ชำระ ศาลมีอำนาจใช้ดุลพินิจปรับลดจำนวนเบี้ยปรับดังกล่าวลงมาเหลือในอัตราร้อยละที่เหมาะสมและสมควรแก่เหตุได้ ไม่ตัดสิทธิอำนาจศาล',
+        takeaway: 'นิติบุคคลไม่ควรออกระเบียบปรับเกินกว่าขอบเขตมาตรา 18/1 ที่วางเพดานสูงสุดของเงินเพิ่มไว้ไม่เกินร้อยละ 12 หรือ 20 ต่อปี'
+      },
+      {
+        id: 'case-9',
+        dika: 'คำพิพากษาศาลฎีกาที่ 4469/2566',
+        topic: 'การประชุมใหญ่และอำนาจผู้จัดการ',
+        title: 'การประชุมใหญ่และรายงานประชุมเท็จ นิติกรรมถือเป็นโมฆะแต่เริ่มแรก ต้องใช้ช่องทางคดีมีข้อพิพาทฟ้องร้องเท่านั้น',
+        facts: 'เจ้าของร่วมยื่นคำร้องฝ่ายเดียวต่อศาลขอเพิกถอนรายงานการประชุมใหญ่ โดยอ้างว่าการประชุมใหญ่ไม่ได้เกิดขึ้นอยู่จริง มีการแอบอ้างทำรายงานการประชุมเพื่อไปแสดงต่อนายทะเบียนที่ดิน',
+        ruling: 'หากการประชุมใหญ่ไม่ได้เคยเกิดขึ้นจริงตามข้อกล่าวอ้าง ย่อมถือว่ามติไม่มีผลผูกพันทางกฎหมายมาตั้งแต่แรก แต่ตามบทบัญญัติ พ.ร.บ.อาคารชุด และ ป.วิ.พ. ไม่เปิดช่องให้ยื่นเป็นคำร้องฝ่ายเดียวต่อศาลได้ทันที ผู้เสียหายจะต้องใช้กระบวนการฟ้องร้องเป็น "คดีมีข้อพิพาท" เพื่อให้คู่กรณีได้นำสืบพยานหลักฐานต่อไป',
+        takeaway: 'การโต้แย้งความชอบด้วยกฎหมายของการประชุมใหญ่ นิติบุคคลหรือผู้ร้องต้องทำคำฟ้องเป็นคดีมีข้อพิพาทให้ศาลแพ่งไต่สวนตามระเบียบ'
+      },
+      {
+        id: 'case-10',
+        dika: 'คำพิพากษาศาลฎีกาที่ 8512/2553',
+        topic: 'การระงับใช้ทรัพย์ส่วนกลางและที่จอดรถ',
+        title: 'นิติบุคคลระงับการมอบคีย์การ์ดผ่านประตูนิรภัยเพื่อบีบบังคับให้จ่ายค่าส่วนกลางไม่ได้ ถือเป็นละเมิดรบกวนสิทธิ์',
+        facts: 'นิติบุคคลอาคารชุดออกระเบียบระงับการส่งมอบบัตร Key Card สัญญานประตูนิรภัยของอาคารแก่เจ้าของร่วมที่ค้างชำระค่าส่วนกลาง เพื่อบังคับให้มาเคลียร์หนี้สิน',
+        ruling: 'พ.ร.บ.อาคารชุด มาตรา 33 วรรคสอง ให้นิติบุคคลมีสิทธิ์ดูแลรักษาทรัพย์ส่วนกลางเพื่อประโยชน์ของเจ้าของร่วมเท่านั้น แต่หามีอำนาจในการทำละเมิดรบกวนสิทธิหรือเสื่อมความสะดวกในการเข้าใช้ทรัพย์ส่วนบุคคลของเจ้าของร่วมไม่ การไม่ให้คีย์การ์ดถือเป็นละเมิด รบกวนสิทธิใช้สอยห้องชุด นิติบุคคลต้องใช้วิธีฟ้องร้องตามกฎหมายแทน',
+        takeaway: 'การทวงหนี้และออกมาตรการต้องไม่ก้าวล่วงสิทธิ์ขั้นพื้นฐานในการใช้สอยทรัพย์ส่วนบุคคลหรือทางเข้าออกหลักของห้องชุด'
+      }
+    ];
+
+    let forumThreads = [];
+
+    // Master Quiz Questions
+    let quizData = [
+      {
+        id: 'q-jan-1',
+        section: 'มาตรา 18',
+        question: 'ตาม มาตรา 18 แห่ง พ.ร.บ. อาคารชุด เจ้าของร่วมมีหน้าที่รับผิดชอบค่าใช้จ่ายส่วนกลางในการดูแลรักษาทรัพย์สินใดมากที่สุด?',
+        options: [
+          'เฉพาะส่วนห้องชุดพักอาศัยที่เป็นกรรมสิทธิ์ของตนเองเท่านั้น',
+          'โครงสร้างหลัก ทางเดินส่วนกลาง สระว่ายน้ำ และลิฟต์โดยสารร่วมกัน',
+          'การทำความสะอาดภายในยูนิตที่ขายไม่หมดของเจ้าของโครงการ',
+          'ค่าธรรมเนียมและภาษีมรดกของคณะกรรมการนิติบุคคล'
+        ],
+        answerIndex: 1,
+        explanation: 'มาตรา 18 กำหนดให้เจ้าของร่วมต้องร่วมกันออกค่าใช้จ่ายที่เกิดจากการดูแลรักษาและการดำเนินการเกี่ยวกับทรัพย์ส่วนกลางตามอัตราส่วนกรรมสิทธิ์'
+      },
+      {
+        id: 'q-jan-2',
+        section: 'มาตรา 18',
+        question: 'หากเจ้าของโครงการ (ผู้จัดสรร) ยังขายยูนิตไม่หมด ใครเป็นผู้รับผิดชอบค่าใช้จ่ายส่วนกลางสำหรับยูนิตเหล่านั้น?',
+        options: [
+          'นิติบุคคลต้องยกเว้นให้ เพื่อสนับสนุนยอดขาย',
+          'เจ้าของร่วมรายอื่นต้องร่วมกันเฉลี่ยจ่ายแทนไปก่อน',
+          'บริษัทผู้จัดสรรโครงการ (เจ้าของเดิม) ต้องร่วมชำระในฐานะเจ้าของร่วม',
+          'เจ้าพนักงานที่ดินเขตเป็นผู้จัดหางบประมาณมาทดแทน'
+        ],
+        answerIndex: 2,
+        explanation: 'อ้างอิงฎีกาที่ 2575/2562 และ 13225/2553 บริษัทผู้พัฒนาหรือเจ้าของโครงการมีฐานะเป็นเจ้าของร่วมในห้องชุดที่ยังไม่ได้โอนกรรมสิทธิ์ จึงมีหน้าที่ต้องชำระค่าส่วนกลาง'
+      },
+      {
+        id: 'q-feb-1',
+        section: 'มาตรา 18/1',
+        question: 'หากเจ้าของร่วมค้างชำระค่าส่วนกลางไม่ถึง 6 เดือน นิติบุคคลมีสิทธิ์คิดเงินเพิ่ม (เบี้ยปรับ) ได้สูงสุดไม่เกินร้อยละเท่าใดต่อปี?',
+        options: [
+          'ไม่เกินร้อยละ 7.5 ต่อปี',
+          'ไม่เกินร้อยละ 12 ต่อปี โดยไม่ทบต้น',
+          'ไม่เกินร้อยละ 15 ต่อปี ทบต้นรายสัปดาห์',
+          'ไม่เกินร้อยละ 20 ต่อปี'
+        ],
+        answerIndex: 1,
+        explanation: 'มาตรา 18/1 วรรคหนึ่ง กำหนดเพดานเงินเพิ่มกรณีล่าช้าไว้ที่อัตราไม่เกินร้อยละ 12 ต่อปี และหากค้างเกิน 6 เดือนขึ้นไปจะปรับสูงสุดไม่เกินร้อยละ 20 ต่อปี'
+      },
+      {
+        id: 'q-feb-2',
+        section: 'มาตรา 18/1',
+        question: 'กรณีค้างชำระค่าใช้จ่ายส่วนกลางตั้งแต่ 6 เดือนขึ้นไป ผลเสียทางกฎหมายข้อใดเป็นไปตามมาตรา 18/1 วรรคสอง?',
+        options: [
+          'ถูกริบห้องชุดตกเป็นของนิติบุคคลโดยพลการ',
+          'ถูกตัดสิทธิ์การอยู่อาศัยและห้ามเข้า-ออกโครงการ',
+          'ถูกระงับสิทธิ์ออกเสียงในการประชุมใหญ่ และระงับสิทธิ์ใช้บริการร่วมตามข้อบังคับ',
+          'ถูกดำเนินคดีอาญามีโทษจำคุกทันที'
+        ],
+        answerIndex: 2,
+        explanation: 'มาตรา 18/1 กำหนดระงับสิทธิ์ใช้ประโยชน์จากบริการส่วนรวม (เช่น คลับเฮาส์ ฟิตเนส) และระงับสิทธิ์ออกเสียงในการประชุมใหญ่'
+      },
+      {
+        id: 'q-mar-1',
+        section: 'มาตรา 17/1',
+        question: 'การประกอบการค้าในโครงการอาคารชุด จะสามารถทำในพื้นที่ประเภทใดได้โดยชอบด้วยกฎหมาย?',
+        options: [
+          'ห้องชุดประเภทใดก็ได้ หากทำประชามติเสียงส่วนใหญ่ของชั้นนั้นแล้ว',
+          'เฉพาะพื้นที่ที่จัดและจดทะเบียนไว้เป็นพื้นที่พาณิชย์โดยเฉพาะตั้งแต่แรกเท่านั้น',
+          'ที่จอดรถส่วนบุคคลของเจ้าของร่วม',
+          'สวนหย่อมหรือลานดาดฟ้าของอาคารชุด'
+        ],
+        answerIndex: 1,
+        explanation: 'มาตรา 17/1 วางข้อห้ามการเปิดร้านค้าเชิงพาณิชย์ในพื้นที่ส่วนกลางหรือห้องชุดพักอาศัยทั่วไป เว้นแต่จะเป็นพื้นที่พาณิชย์ที่กำหนดไว้แต่แรก'
+      },
+      {
+        id: 'q-apr-1',
+        section: 'มาตรา 29',
+        question: 'เอกสารสำคัญใดที่ผู้ขายห้องชุดต้องยื่นต่อเจ้าพนักงานที่ดินก่อนจดทะเบียนโอนสิทธิ์ตามมาตรา 29?',
+        options: [
+          'สำเนาทะเบียนบ้านของประธานคณะกรรมการ',
+          'ใบเสร็จรับเงินค่าจ้างแม่บ้านโครงการ',
+          'หนังสือรับรองการปลอดหนี้ (ใบปลอดหนี้) จากนิติบุคคลอาคารชุด',
+          'มติรายงานการประชุมใหญ่ประจำปีฉบับย่อ'
+        ],
+        answerIndex: 2,
+        explanation: 'มาตรา 29 วรรคสอง บัญญัติให้เจ้าพนักงานที่ดินจะจดทะเบียนโอนสิทธิ์ได้ต่อเมื่อมีการแสดงหนังสือรับรองการปลอดหนี้จากนิติบุคคลอาคารชุด'
+      },
+      {
+        id: 'q-may-1',
+        section: 'มาตรา 41',
+        question: 'บุริมสิทธิเหนือหนี้จำนองของหนี้ค่าส่วนกลางตามมาตรา 41 จะมีผลสมบูรณ์และบังคับใช้ได้ก่อนเมื่อใด?',
+        options: [
+          'เมื่อผู้จัดการนิติบุคคลได้ส่งรายการหนี้ค้างชำระอย่างเป็นทางการต่อเจ้าพนักงานที่ดิน',
+          'เมื่อลูกบ้านยินยอมด้วยวาจา',
+          'เมื่อสลักหลังโฉนดด้วยปากกาเคมี',
+          'เมื่อคณะกรรมการส่งข้อความไลน์แจ้งเตือนภัย'
+        ],
+        answerIndex: 0,
+        explanation: 'มาตรา 41 วรรคท้าย กำหนดว่าหากส่งบัญชีรายการหนี้ค้างให้พนักงานเจ้าหน้าที่ก่อนการจำนอง บุริมสิทธินั้นจะอยู่อันดับแรกก่อนหนี้จำนอง'
+      },
+      {
+        id: 'q-jun-1',
+        section: 'มาตรา 4',
+        question: 'ข้อใดจัดเป็น "ทรัพย์ส่วนบุคคล" ตามบทนิยามมาตรา 4 ของพระราชบัญญัติอาคารชุด?',
+        options: [
+          'โถงทางเดินหน้าห้องชุดและไฟกิ่งระเบียงทางเดิน',
+          'ท่อระบายน้ำโสโครกหลักของตึกที่ลากผ่านหลังห้อง',
+          'ยูนิตห้องชุดรวมถึงโครงสร้างเสริมที่ระบุไว้ในหนังสิทธิ์ อ.ช. 2 ของรายนั้น',
+          'ลิฟต์โดยสารและระบบป้องกันอัคคีภัย'
+        ],
+        answerIndex: 2,
+        explanation: 'มาตรา 4 นิยามว่า ทรัพย์ส่วนบุคคลคือตัวห้องชุด พื้นที่สิ่งปลูกสร้างที่จัดไว้เฉพาะของเจ้าของร่วมแต่ละราย'
+      },
+      {
+        id: 'q-jul-1',
+        section: 'มาตรา 15',
+        question: 'ตามมาตรา 15 ข้อใดต่อไปนี้ถือเป็น "ทรัพย์ส่วนกลาง" โดยผลของกฎหมายเสมอ?',
+        options: [
+          'เคาน์เตอร์ครัวและเตาไฟฟ้าในยูนิต',
+          'ที่ดินที่ตั้งอาคารชุด และโครงสร้างหลักคอนกรีตเสริมเหล็กของอาคาร',
+          'เตียงนอนและผ้าม่านห้องรับแขกของลูกบ้าน',
+          'รถยนต์ส่วนบุคคลของผู้จัดการอาคาร'
+        ],
+        answerIndex: 1,
+        explanation: 'มาตรา 15 กำหนดให้ โครงสร้างหลักอาคาร เสา คาน ดาดฟ้า และที่ดินที่ตั้งโครงการ จัดเป็นทรัพย์ส่วนกลางโดยแท้'
+      },
+      {
+        id: 'q-aug-1',
+        section: 'มาตรา 32',
+        question: 'การแก้ไขเปลี่ยนแปลง "ข้อบังคับนิติบุคคล" จะมีผลผูกพันบังคับใช้ได้อย่างสมบูรณ์ตามมาตรา 32 เมื่อใด?',
+        options: [
+          'หลังจากประธานบอร์ดเซ็นอนุมัติภายในฝ่ายเดียว',
+          'เมื่อได้รับความเห็นชอบจากเจ้าหน้าที่ตำรวจท้องที่',
+          'เมื่อนำไปจดทะเบียนต่อพนักงานเจ้าหน้าที่ที่ดิน ณ สำนักงานที่ดินแล้ว',
+          'ทันทีที่พิมพ์แจ้งลงในกลุ่ม Line Official ของนิติบุคคล'
+        ],
+        answerIndex: 2,
+        explanation: 'มาตรา 32 วรรคสอง กำหนดให้การแก้ไขข้อบังคับต้องผ่านที่ประชุมใหญ่และนำไปจดทะเบียนต่อพนักงานเจ้าหน้าที่จึงจะมีผลตามกฎหมาย'
+      },
+      {
+        id: 'q-sep-1',
+        section: 'มาตรา 33',
+        question: 'ข้อใดเป็นวัตถุประสงค์หลักขั้นพื้นฐานในการจัดตั้งนิติบุคคลอาคารชุดตาม มาตรา 33?',
+        options: [
+          'เพื่อแสวงหาผลกำไรจากตลาดหลักทรัพย์',
+          'เพื่อจัดการและดูแลรักษาทรัพย์ส่วนกลางของอาคารชุดร่วมกัน',
+          'เพื่อประกอบการปล่อยกู้สินเชื่อรายย่อยให้ลูกบ้าน',
+          'เพื่อเป็นตัวแทนจำหน่ายอุปกรณ์เครื่องไฟฟ้าคอนโด'
+        ],
+        answerIndex: 1,
+        explanation: 'มาตรา 33 บัญญัติชัดเจนว่า นิติบุคคลอาคารชุดจัดตั้งขึ้นโดยมีวัตถุประสงค์เพื่อจัดการและดูแลรักษาทรัพย์ส่วนกลาง'
+      },
+      {
+        id: 'q-oct-1',
+        section: 'มาตรา 35',
+        question: 'ใครทำหน้าที่เป็นตัวแทนและเป็นผู้แทนนิติบุคคลอาคารชุดในการทำนิติกรรมภายนอกตามมาตรา 35?',
+        options: [
+          'หัวหน้าพนักงานรักษาความปลอดภัยประจำโครงการ',
+          'ผู้แทนบริษัทประกันภัยตึก',
+          'ผู้จัดการนิติบุคคลอาคารชุด',
+          'คณะกรรมการที่มีอายุการทำงานสูงสุด'
+        ],
+        answerIndex: 2,
+        explanation: 'มาตรา 35 และ 36 กำหนดให้ผู้จัดการนิติบุคคลเป็นผู้แทนอย่างเป็นทางการของนิติบุคคลอาคารชุดในการประสานงานภายนอก'
+      },
+      {
+        id: 'q-nov-1',
+        section: 'มาตรา 48',
+        question: 'การปรับขึ้นอัตราค่าส่วนกลางตามมาตรา 48 ต้องได้รับคะแนนเสียงเห็นชอบเท่าใดจากคะแนนเสียงทั้งหมด?',
+        options: [
+          'คะแนนเสียงไม่น้อยกว่ากึ่งหนึ่ง (50%) ของเจ้าของร่วมทั้งหมดในอาคารชุด',
+          'เสียงข้างมากธรรมดาของผู้เข้าประชุมในวันนั้น',
+          'เสียงเอกฉันท์ 100% จากผู้เข้าร่วมโหวต',
+          'ความยินยอมเกินร้อยละ 10 ของผู้ถือโฉนดพักอาศัย'
+        ],
+        answerIndex: 0,
+        explanation: 'มาตรา 48 (5) กำหนดให้การปรับอัตราการเฉลี่ยค่าส่วนกลาง ต้องได้รับคะแนนเสียงเกินกึ่งหนึ่งของคะแนนเสียงเจ้าของร่วมทั้งหมด'
+      },
+      {
+        id: 'q-dec-1',
+        section: 'มาตรา 65',
+        question: 'ผู้ฝ่าฝืนประกอบการค้าในพื้นที่ห้ามพาณิชย์ของอาคารชุดตามมาตรา 17/1 จะมีอัตราโทษปรับรายวันตามมาตรา 65 เท่าใด?',
+        options: [
+          'ปรับไม่เกินวันละ 500 บาท',
+          'ปรับไม่เกินวันละ 1,000 บาท',
+          'ปรับไม่เกินวันละ 5,000 บาท ตลอดเวลาที่ยังฝ่าฝืนอยู่',
+          'กักขังแทนค่าปรับไม่เกิน 30 วัน'
+        ],
+        answerIndex: 2,
+        explanation: 'มาตรา 65 กำหนดให้มีโทษปรับไม่เกิน 50,000 บาท และปรับรายวันไม่เกินวันละ 5,000 บาท ตลอดเวลาที่ยังฝ่าฝืนเปิดการค้า'
+      }
+    ];
+
+    // Persisted Leaderboard state
+    let leaderboardEntries = [];
+
+    // Active playing state
+    let activeQuizSession = {
+      participantName: '',
+      selectedMonth: 'มกราคม',
+      targetSection: 'มาตรา 18',
+      currentBatchQuestions: [],
+      currentIndex: 0,
+      score: 0,
+      startTime: 0,
+      timerIntervalId: null,
+      elapsedSeconds: 0
+    };
+
+    // Load persisted configurations from localStorage defensively
+    function loadPersistedState() {
+      try {
+        const savedLeaderboard = localStorage.getItem('condolaw_leaderboard');
+        if (savedLeaderboard) {
+          leaderboardEntries = JSON.parse(savedLeaderboard);
+        } else {
+          // Default baseline Leaderboard
+          leaderboardEntries = [
+            { id: '1', name: 'คุณวิพุธ ฝ่ายนิติ', score: 10, section: 'มกราคม (มาตรา 18)', timeSpent: '45.2 วินาที', date: '18 ม.ค. 2568' },
+            { id: '2', name: 'คุณธวัชชัย คณะกรรมการ', score: 9, section: 'กุมภาพันธ์ (มาตรา 18/1)', timeSpent: '58.7 วินาที', date: '19 ม.ค. 2568' },
+            { id: '3', name: 'คุณพิมพรรณ ลูกบ้านชั้น 9', score: 8, section: 'มีนาคม (มาตรา 17/1)', timeSpent: '71.1 วินาที', date: '20 ม.ค. 2568' }
+          ];
+        }
+
+        const savedQuizData = localStorage.getItem('condolaw_quiz_db');
+        if (savedQuizData) {
+          const parsed = JSON.parse(savedQuizData);
+          if (Array.isArray(parsed) && parsed.length > 0 && parsed[0].section) {
+            quizData = parsed;
+          }
+        }
+
+        // Load admin credentials from localStorage
+        const savedUsername = localStorage.getItem('condolaw_admin_user');
+        const savedPassword = localStorage.getItem('condolaw_admin_pass');
+        if (savedUsername && savedPassword) {
+          adminUsername = savedUsername;
+          adminPassword = savedPassword;
+        }
+      } catch (err) {
+        console.warn('Could not read state from localStorage', err);
+      }
+    }
+
+    function saveToPersistStore() {
+      try {
+        localStorage.setItem('condolaw_leaderboard', JSON.stringify(leaderboardEntries));
+        localStorage.setItem('condolaw_quiz_db', JSON.stringify(quizData));
+      } catch (err) {
+        console.warn('Could not save state to localStorage', err);
+      }
+    }
+
+    // Initialize state on boot
+    loadPersistedState();
+
+    // =========================================================================
+    // MODAL LOGIN HANDLERS
+    // =========================================================================
+    function openLoginModal() {
+      if (isLoggedIn) {
+        switchMode('back');
+      } else {
+        document.getElementById('loginModal').classList.remove('hidden');
+        document.getElementById('loginError').style.display = 'none';
+      }
+    }
+
+    function closeLoginModal() {
+      document.getElementById('loginModal').classList.add('hidden');
+    }
+
+    function handleLoginSubmit(e) {
+      e.preventDefault();
+      const user = document.getElementById('loginUsername').value.trim();
+      const pass = document.getElementById('loginPassword').value.trim();
+      const err = document.getElementById('loginError');
+
+      // Standalone credential verified client-side (no network dependence)
+      if (user === adminUsername && pass === adminPassword) {
+        isLoggedIn = true;
+        err.style.display = 'none';
+        closeLoginModal();
+        switchMode('back');
+      } else {
+        err.style.display = 'block';
+      }
+    }
+
+    function handleLogout() {
+      isLoggedIn = false;
+      switchMode('front');
+    }
+
+    // =========================================================================
+    // ADMIN ACCESS CREDENTIALS UPDATING
+    // =========================================================================
+    function handleUpdateCredentials(e) {
+      e.preventDefault();
+      const newUser = document.getElementById('updateUsername').value.trim();
+      const newPass = document.getElementById('updatePassword').value.trim();
+      if (!newUser || !newPass) {
+        alert('กรุณากรอกข้อมูลให้ครบถ้วน');
+        return;
+      }
+
+      adminUsername = newUser;
+      adminPassword = newPass;
+
+      try {
+        localStorage.setItem('condolaw_admin_user', newUser);
+        localStorage.setItem('condolaw_admin_pass', newPass);
+        alert('บันทึกสิทธิ์และรหัสผ่านใหม่สำหรับเข้าสู่ระบบหลังบ้านเรียบร้อยแล้ว! สำหรับการเข้าสู่ระบบครั้งถัดไปกรุณาใช้สิทธิ์บัญชีผู้ใช้ใหม่นี้');
+      } catch (err) {
+        console.warn('Could not save admin credentials to localStorage', err);
+      }
+    }
+
+    // =========================================================================
+    // MODE & TAB NAVIGATION
+    // =========================================================================
+    function switchMode(mode) {
+      if (mode === 'back' && !isLoggedIn) {
+        openLoginModal();
+        return;
+      }
+
+      currentMode = mode;
+      const btnFront = document.getElementById('btnModeFront');
+      const btnBack = document.getElementById('btnModeBack');
+      const banner = document.getElementById('modeBanner');
+      const bannerTitle = document.getElementById('modeBannerTitle');
+      const bannerDesc = document.getElementById('modeBannerDesc');
+      const quickBtn = document.getElementById('modeQuickToggleBtn');
+
+      if (mode === 'front') {
+        document.body.classList.remove('is-backoffice');
+        btnFront.className = 'mode-btn active-front';
+        btnBack.className = 'mode-btn';
+        banner.className = 'mode-banner front';
+        bannerTitle.textContent = 'โหมดหน้าบ้าน (Front-Office): สำหรับเจ้าของร่วม คณะกรรมการ และผู้สนใจทั่วไป';
+        bannerDesc.textContent = 'ค้นหาตัวบทกฎหมายตาม พ.ร.บ.อาคารชุด ศึกษาแนวทางแก้ไขปัญหา คดีตัวอย่างศาลฎีกา ร่วมตั้งกระทู้ถาม-ตอบ และทำแบบทดสอบวัดความรู้';
+        quickBtn.textContent = 'สลับไปจัดการข้อมูลหลังบ้าน →';
+        quickBtn.onclick = () => openLoginModal();
+      } else {
+        document.body.classList.add('is-backoffice');
+        btnFront.className = 'mode-btn';
+        btnBack.className = 'mode-btn active-back';
+        banner.className = 'mode-banner back';
+        bannerTitle.textContent = 'โหมดหลังบ้าน (Back-Office): ควบคุมระบบฐานข้อมูล คลังข้อสอบ และตั้งค่าสำหรับแอดมิน';
+        bannerDesc.textContent = 'จัดการเนื้อหามาตรา พ.ร.บ., คลังถามตอบ FAQ, ตัวอย่างคดีศาลฎีกา, ปรับแต่งข้อสอบ Quiz และตั้งสิทธิ์ระบบหลังบ้าน';
+        quickBtn.innerHTML = '🚪 ออกจากระบบหลังบ้าน (Log out)';
+        quickBtn.onclick = () => handleLogout();
+      }
+
+      syncViewVisibility();
+      renderAll();
+    }
+
+    function switchTab(tab) {
+      currentTab = tab;
+      document.querySelectorAll('.nav-tab').forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('data-tab') === tab);
+      });
+      document.querySelectorAll('.tab-view').forEach(sec => {
+        sec.classList.toggle('hidden', sec.id !== 'view-' + tab);
+      });
+      syncViewVisibility();
+      renderAll();
+    }
+
+    function syncViewVisibility() {
+      const isBack = currentMode === 'back';
+      ['laws', 'ai', 'faq', 'cases', 'quiz'].forEach(section => {
+        const frontEl = document.getElementById(section + '-front');
+        const backEl = document.getElementById(section + '-back');
+        if (frontEl && backEl) {
+          frontEl.classList.toggle('hidden', isBack);
+          backEl.classList.toggle('hidden', !isBack);
+        }
+      });
+    }
+
+    // =========================================================================
+    // 1. LAWS REFERENCE (FRONT & BACK)
+    // =========================================================================
+    function renderLaws() {
+      const query = (document.getElementById('lawSearchInput')?.value || '').trim().toLowerCase();
+      const cat = document.getElementById('lawCategorySelect')?.value || 'all';
+      const grid = document.getElementById('lawsGrid');
+
+      const filtered = lawsData.filter(item => {
+        const matchCat = cat === 'all' || item.category === cat;
+        const matchText = !query ||
+          item.section.toLowerCase().includes(query) ||
+          item.title.toLowerCase().includes(query) ||
+          item.content.toLowerCase().includes(query) ||
+          item.note.toLowerCase().includes(query);
+        return matchCat && matchText;
+      });
+
+      if (filtered.length === 0) {
+        grid.innerHTML = `
+          <div class="empty-state" style="grid-column: 1 / -1;">
+            <h3>ไม่พบมาตราที่ค้นหา</h3>
+            <p>ลองเปลี่ยนคำค้นหา หรือเลือก "ทุกหมวดหมู่กฎหมาย"</p>
+          </div>
+        `;
+      } else {
+        grid.innerHTML = filtered.map(item => `
+          <article class="law-card">
+            <div>
+              <span class="tag">${escapeHtml(item.category)}</span>
+              <div class="law-section-num">${escapeHtml(item.section)}</div>
+              <h3 class="law-title">${escapeHtml(item.title)}</h3>
+              <p class="law-content">${escapeHtml(item.content)}</p>
+            </div>
+            <div class="law-note">
+              <strong>แนวทางปฏิบัติ:</strong> ${escapeHtml(item.note)}
+            </div>
+          </article>
+        `).join('');
+      }
+
+      // Admin table
+      const tbody = document.getElementById('lawsAdminTable');
+      if (tbody) {
+        if (lawsData.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;color:var(--muted);">ยังไม่มีข้อมูลมาตรา</td></tr>`;
+        } else {
+          tbody.innerHTML = lawsData.map(item => `
+            <tr>
+              <td><strong>${escapeHtml(item.section)}</strong></td>
+              <td><span class="tag">${escapeHtml(item.category)}</span></td>
+              <td>${escapeHtml(item.title)}</td>
+              <td style="white-space:nowrap;">
+                <button type="button" class="btn btn-secondary btn-sm" onclick="editLaw('${item.id}')">แก้ไข</button>
+                <button type="button" class="btn btn-danger btn-sm" onclick="deleteLaw('${item.id}')">ลบ</button>
+              </td>
+            </tr>
+          `).join('');
+        }
+      }
+    }
+
+    function saveLaw(e) {
+      e.preventDefault();
+      const editId = document.getElementById('lawEditId').value;
+      const section = document.getElementById('lawSectionInput').value.trim();
+      const category = document.getElementById('lawCategoryInput').value;
+      const title = document.getElementById('lawTitleInput').value.trim();
+      const content = document.getElementById('lawContentInput').value.trim();
+      const note = document.getElementById('lawNoteInput').value.trim();
+      const errEl = document.getElementById('lawFormError');
+
+      if (!section || !title || !content || !note) {
+        errEl.style.display = 'block';
+        return;
+      }
+      errEl.style.display = 'none';
+
+      if (editId) {
+        const idx = lawsData.findIndex(x => x.id === editId);
+        if (idx > -1) {
+          lawsData[idx] = { id: editId, section, category, title, content, note };
+        }
+      } else {
+        lawsData.unshift({
+          id: 'law-' + Date.now(),
+          section,
+          category,
+          title,
+          content,
+          note
+        });
+      }
+      resetLawForm();
+      saveToPersistStore();
+      renderLaws();
+    }
+
+    function editLaw(id) {
+      const item = lawsData.find(x => x.id === id);
+      if (!item) return;
+      document.getElementById('lawFormHeading').textContent = 'แก้ไขข้อมูลมาตรา: ' + item.section;
+      document.getElementById('lawEditId').value = item.id;
+      document.getElementById('lawSectionInput').value = item.section;
+      document.getElementById('lawCategoryInput').value = item.category;
+      document.getElementById('lawTitleInput').value = item.title;
+      document.getElementById('lawContentInput').value = item.content;
+      document.getElementById('lawNoteInput').value = item.note;
+      document.getElementById('lawFormError').style.display = 'none';
+    }
+
+    function deleteLaw(id) {
+      lawsData = lawsData.filter(x => x.id !== id);
+      saveToPersistStore();
+      renderLaws();
+    }
+
+    function resetLawForm() {
+      document.getElementById('lawFormHeading').textContent = 'เพิ่มมาตราอ้างอิงใหม่';
+      document.getElementById('lawEditId').value = '';
+      document.getElementById('lawForm').reset();
+      document.getElementById('lawFormError').style.display = 'none';
+    }
+
+    // =========================================================================
+    // 2. AI ASSISTANT DISPATCHER & SIMULATOR
+    // =========================================================================
+    function submitAiPrompt(promptText) {
+      document.getElementById('aiInput').value = promptText;
+      sendAiMessage();
+    }
+
+    function sendAiMessage() {
+      const inputEl = document.getElementById('aiInput');
+      const text = inputEl.value.trim();
+      if (!text) return;
+
+      const chatContainer = document.getElementById('aiChatMessages');
+
+      // Append User message
+      const userMsgHtml = `
+        <div class="ai-msg ai-msg-outgoing">
+          ${escapeHtml(text)}
+        </div>
+      `;
+      chatContainer.insertAdjacentHTML('beforeend', userMsgHtml);
+      inputEl.value = '';
+      chatContainer.scrollTop = chatContainer.scrollHeight;
+
+      // Append AI Thinking bubble
+      const thinkingId = 'thinking-' + Date.now();
+      const thinkingHtml = `
+        <div class="ai-thinking" id="${thinkingId}">
+          <span>AI กำลังค้นหากรณีศึกษาและกฎหมายอ้างอิง</span>
+          <div class="ai-dot"></div>
+          <div class="ai-dot"></div>
+          <div class="ai-dot"></div>
+        </div>
+      `;
+      chatContainer.insertAdjacentHTML('beforeend', thinkingHtml);
+      chatContainer.scrollTop = chatContainer.scrollHeight;
+
+      // Simulate AI thinking
+      setTimeout(() => {
+        const thinkingEl = document.getElementById(thinkingId);
+        if (thinkingEl) thinkingEl.remove();
+
+        const lowercaseText = text.toLowerCase();
+        let matchedLaws = [];
+        let matchedCases = [];
+        let diagnosisTitle = 'วิเคราะห์ตามข้อกฎหมายอาคารชุด';
+        let diagnosisText = 'จากการค้นหาประเด็นคำถามของคุณ AI ไม่พบเลขมาตราหรือเลขฎีกาที่จับคู่ได้โดยตรง อย่างไรก็ตาม ตามระเบียบการบริหารอาคารชุด ข้อพิพาททั่วไปต้องได้รับการลงมติในที่ประชุมคณะกรรมการหรือที่ประชุมใหญ่เจ้าของร่วมตามข้อบังคับของนิติบุคคลอาคารชุดนั้นๆ เป็นสำคัญ';
+        let actionSteps = '1. ตรวจสอบข้อบังคับอาคารชุดที่จดทะเบียนไว้ ณ สำนักงานที่ดิน\n2. นำเรื่องเสนอต่อผู้จัดการนิติบุคคลเพื่อบรรจุเป็นวาระการประชุมคณะกรรมการ\n3. ขอปรึกษาฝ่ายกฎหมายหรือยื่นขอคำวินิจฉัยจากเจ้าพนักงานที่ดินเขตท้องที่';
+
+        if (lowercaseText.includes('ตัดน้ำ') || lowercaseText.includes('ล็อกล้อ') || lowercaseText.includes('ล๊อกล้อ') || lowercaseText.includes('ล็อกล้อรถ') || lowercaseText.includes('ที่จอดรถ') || lowercaseText.includes('จอดรถ')) {
+          matchedLaws = lawsData.filter(l => l.section.includes('18/1') || l.section.includes('18'));
+          matchedCases = casesData.filter(c => c.dika.includes('1013/2550') || c.dika.includes('10230/2553') || c.dika.includes('8512/2553'));
+          diagnosisTitle = 'วิเคราะห์กฎหมาย: การตัดน้ำ ล็อกล้อ และระงับสิทธิที่จอดรถส่วนบุคคล';
+          diagnosisText = 'นิติบุคคล **ไม่สามารถทำการล็อกล้อ หรือตัดน้ำประปา** ในที่จอดรถที่เป็นกรรมสิทธิ์ส่วนบุคคล (อ.ช. 2) ของเจ้าของร่วมได้ แม้จะค้างชำระค่าส่วนกลาง เนื่องจากเป็นการละเมิดสิทธิในทรัพย์ส่วนบุคคล การติดตามหนี้ต้องใช้สิทธิเรียกร้องตามกฎหมายหรือฟ้องคดีต่อศาลเท่านั้น ส่วนการให้บริการทรัพย์ส่วนกลางอื่นจะกระทำได้ต่อเมื่อค้างชำระเกิน 6 เดือนและมีระบุไว้ในข้อบังคับอย่างชัดเจน';
+          actionSteps = '1. นิติบุคคลต้องออกหนังสือทวงถามหนี้ตามกฎหมาย (มาตรา 18/1)\n2. หลีกเลี่ยงการล็อกล้อในพื้นที่จอดรถระบุโฉนดส่วนบุคคลเพื่อป้องกันการฟ้องกลับฐานละเมิด\n3. ฟ้องคดีเรียกชำระหนี้ค้างพร้อมเบี้ยปรับ (เงินเพิ่ม) ไม่เกินร้อยละ 12 หรือ 20 ต่อปีต่อศาลแพ่ง';
+        } 
+        else if (lowercaseText.includes('รั่ว') || lowercaseText.includes('น้ำท่วม') || lowercaseText.includes('ท่อ') || lowercaseText.includes('อุดตัน') || lowercaseText.includes('น้ำซึม') || lowercaseText.includes('ซ่อมแซม')) {
+          matchedLaws = lawsData.filter(l => l.section.includes('15') || l.section.includes('32'));
+          matchedCases = casesData.filter(c => c.dika.includes('4493/2543'));
+          diagnosisTitle = 'วิเคราะห์กฎหมาย: ท่อระบายน้ำอุดตัน ทรัพย์ส่วนกลางชำรุด น้ำท่วมห้องชุด';
+          diagnosisText = 'เมื่อระบบท่อเมนหลักหรือส่วนประกอบอาคารที่เป็น **ทรัพย์ส่วนกลาง** เกิดชำรุดทรุดโทรมหรืออุดตัน ทำให้น้ำท่วมเสียหายไปยังห้องชุดส่วนบุคคล นิติบุคคลมีหน้าที่ทางกฎหมายและตามวัตถุประสงค์ (มาตรา 33) ในการดูแลรักษาทรัพย์ส่วนกลาง นิติบุคคลจึงปฏิเสธความรับผิดไม่ได้และต้องชดใช้ค่าเสียหายฐานละเมิดแก่เจ้าของห้องชุด';
+          actionSteps = '1. เร่งส่งวิศวกรหรือช่างเทคนิคตรวจสอบแยกจุดรั่วไหลว่ามาจากท่อเมนส่วนกลางหรือท่อเฉพาะห้องชุด\n2. หากเป็นระบบส่วนกลาง นิติบุคคลทำแผนประเมินค่าเสียหาย ซ่อมแซมระบบ และเยียวยาเจ้าของห้องชุด\n3. ติดตั้งแผนบำรุงรักษาเชิงป้องกัน (Preventive Maintenance) ของตึกและเจรจาร่วมกับประกันภัยของอาคาร';
+        }
+        else if (lowercaseText.includes('โครงการ') || lowercaseText.includes('ผู้จัดสรร') || lowercaseText.includes('ขายไม่หมด') || lowercaseText.includes('เจ้าของโครงการ') || lowercaseText.includes('ผู้พัฒนา')) {
+          matchedLaws = lawsData.filter(l => l.section.includes('18') || l.section.includes('4'));
+          matchedCases = casesData.filter(c => c.dika.includes('2575/2562') || c.dika.includes('13225/2553'));
+          diagnosisTitle = 'วิเคราะห์กฎหมาย: ความรับผิดชอบค่าส่วนกลางของเจ้าของโครงการสำหรับห้องชุดที่ยังขายไม่หมด';
+          diagnosisText = 'บริษัทผู้พัฒนาโครงการหรือเจ้าของโครงการ (ผู้จัดสรร) ถือเป็น "เจ้าของร่วม" ตามกฎหมายสำหรับยูนิตห้องชุดที่จดทะเบียนแล้วแต่ยังไม่ได้โอนกรรมสิทธิ์ให้บุคคลภายนอก ดังนั้น **เจ้าของโครงการมีหน้าที่ตามกฎหมายต้องจ่ายค่าส่วนกลางให้แก่นิติบุคคลอย่างเท่าเทียม** จะเขียนข้อบังคับยกเว้นความรับผิดนี้ให้ตนเองไม่ได้เด็ดขาด';
+          actionSteps = '1. ผู้จัดการนิติบุคคลตรวจสอบทะเบียนยูนิตทั้งหมดที่ยังเป็นชื่อของเจ้าของโครงการ\n2. ออกหนังสือเรียกเก็บค่าส่วนกลางย้อนหลังนับแต่วันที่จดทะเบียนนิติบุคคลอาคารชุด\n3. ดำเนินการฟ้องร้องบังคับชำระหากบริษัทเจ้าของโครงการบิดพริ้วปฏิเสธ';
+        }
+        else if (lowercaseText.includes('ร้านค้า') || lowercaseText.includes('ร้านกาแฟ') || lowercaseText.includes('ประกอบการค้า') || lowercaseText.includes('ทำมาค้าขาย') || lowercaseText.includes('เปิดร้าน')) {
+          matchedLaws = lawsData.filter(l => l.section.includes('17/1'));
+          matchedCases = casesData.filter(c => c.dika.includes('3615/2566'));
+          diagnosisTitle = 'วิเคราะห์กฎหมาย: การนำพื้นที่ส่วนกลางหรือที่จอดรถไปเปิดร้านค้าเชิงพาณิชย์';
+          diagnosisText = 'ตามกฎหมายมาตรา 17/1 การนำพื้นที่อาคารชุดมาทำการค้า ต้องจัดระบบทางเข้าออกแยกต่างหากไม่รบกวนลูกบ้าน และ **ห้ามมิให้ประกอบการค้าในพื้นที่ทรัพย์ส่วนกลางหรือห้องชุดพักอาศัย** เว้นแต่จะมีระบุและจดทะเบียนตั้งแต่แรก การใช้มติที่ประชุมใหญ่อนุมัติให้ก่อสร้างร้านค้าในทรัพย์ส่วนกลางที่ขัดกับกฎหมายมาตรานี้ ถือเป็นมติที่ไม่ชอบและฝ่าฝืนมีโทษปรับทางอาญา';
+          actionSteps = '1. ตรวจสอบแบบแปลนอาคารชุดเดิมว่ามีห้องชุดพาณิชย์ที่จดทะเบียนพาณิชย์ไว้แต่แรกหรือไม่\n2. สั่งระงับการต่อเติมพื้นที่จอดรถหรือทางเดินส่วนกลางเพื่อประกอบการค้าของร้านค้าใดๆ ทันที\n3. หากมีการฝ่าฝืน ให้ทำหนังสือแจ้งเตือนชี้แจงโทษปรับตามมาตรา 65';
+        }
+        else if (lowercaseText.includes('5 ปี') || lowercaseText.includes('อายุความ') || lowercaseText.includes('ขายทอดตลาด') || lowercaseText.includes('ขาดอายุความ') || lowercaseText.includes('ยึดทรัพย์')) {
+          matchedLaws = lawsData.filter(l => l.section.includes('29') || l.section.includes('41'));
+          matchedCases = casesData.filter(c => c.dika.includes('2081/2567') || c.dika.includes('9528/2557'));
+          diagnosisTitle = 'วิเคราะห์กฎหมาย: อายุความหนี้ค่าส่วนกลางและการบังคับชำระหนี้จากเงินขายทอดตลาด';
+          diagnosisText = 'แม้หนี้ค่าใช้จ่ายส่วนกลางจะมีอายุความฟ้องร้อง 5 ปี แต่กฎหมายใบปลอดหนี้ (มาตรา 29) และบุริมสิทธิ (มาตรา 41) วางหลักว่า การโอนกรรมสิทธิ์จะทำไม่ได้หากยังไม่ชำระค่าส่วนกลางค้างจ่ายจนครบถ้วน ดังนั้น ศาลฎีกาปี 2567 วินิจฉัยว่า **นิติบุคคลมีสิทธิ์ขอรับชำระหนี้ค่าส่วนกลางรวมเงินเพิ่มทั้งหมดจากเงินที่ได้จากการขายทอดตลาดได้ แม้จะมีบางส่วนค้างชำระเกินกว่า 5 ปีก็ตาม**';
+          actionSteps = '1. จัดทำบัญชีหนี้และเงินเพิ่มของยูนิตที่ถูกกรมบังคับคดียึดทรัพย์อย่างละเอียด\n2. ส่งหนังสือแจ้งรายการค้างชำระต่อพนักงานเจ้าหน้าที่ที่ดิน และยื่นคำร้องขอกันส่วนเงินต่อเจ้าพนักงานบังคับคดีทันที\n3. ปฏิเสธการออกหนังสือรับรองการปลอดหนี้จนกว่าจะได้รับเงินชำระครบถ้วนตามจริง';
+        }
+        else {
+          lawsData.forEach(l => {
+            if (lowercaseText.includes(l.category.toLowerCase()) || lowercaseText.includes(l.section.toLowerCase()) || l.content.toLowerCase().includes(lowercaseText)) {
+              if (matchedLaws.length < 2) matchedLaws.push(l);
+            }
+          });
+          casesData.forEach(c => {
+            if (lowercaseText.includes(c.topic.toLowerCase()) || lowercaseText.includes(c.dika.toLowerCase()) || c.title.toLowerCase().includes(lowercaseText)) {
+              if (matchedCases.length < 2) matchedCases.push(c);
+            }
+          });
+          if (matchedLaws.length > 0 || matchedCases.length > 0) {
+            diagnosisTitle = 'ผลการสืบค้นและวินิจฉัยโดย AI (วิเคราะห์ตรงตามคำค้นหา)';
+            diagnosisText = `AI ตรวจพบข้อกำหนดที่เกี่ยวข้อง โดยพบมาตรากฎหมายอ้างอิง ${matchedLaws.length} มาตรา และคำพิพากษาศาลฎีกาที่ตรงกับประเด็นที่คุณปรึกษา ${matchedCases.length} คดีดังนี้ครับ`;
+            actionSteps = '1. ศึกษาเนื้อหาและสาระสำคัญของมาตราและฎีกาที่ AI สรุปให้ด้านล่างนี้\n2. ใช้เปรียบเทียบกับข้อเท็จจริงในโครงการของท่านเพื่อประเมินความชอบด้วยกฎหมาย\n3. ปรึกษาทนายความเพื่อเขียนหนังสือบอกกล่าวทวงถามหรือเตรียมสำนวนคดีต่อไป';
+          }
+        }
+
+        let matchedLawsHtml = matchedLaws.map(l => `
+          <div style="background:var(--brand-soft); padding:10px 12px; border-radius:6px; margin-top:8px; border-left:3px solid var(--brand); font-size:13.5px;">
+            <strong>มาตราที่เกี่ยวข้อง: ${escapeHtml(l.section)}</strong> - ${escapeHtml(l.title)}
+            <div style="margin-top:4px; font-size:12.5px; color:var(--ink-secondary);">${escapeHtml(l.content)}</div>
+          </div>
+        `).join('');
+
+        let matchedCasesHtml = matchedCases.map(c => `
+          <div style="background:var(--accent-soft); padding:10px 12px; border-radius:6px; margin-top:8px; border-left:3px solid var(--accent); font-size:13.5px;">
+            <strong>กรณีศึกษา: ${escapeHtml(c.dika)}</strong> - ${escapeHtml(c.title)}
+            <div style="margin-top:4px; font-size:12.5px; color:var(--ink-secondary); line-height:1.4;">
+              <strong>ข้อเท็จจริง:</strong> ${escapeHtml(c.facts)}<br>
+              <strong>คำวินิจฉัย:</strong> ${escapeHtml(c.ruling)}
+            </div>
+          </div>
+        `).join('');
+
+        const responseMsg = `
+          <div class="ai-msg ai-msg-incoming" style="width: 100%; max-width: 95%;">
+            <div style="font-weight:700; color:var(--brand); border-bottom:1px solid var(--border); padding-bottom:6px; margin-bottom:10px; font-size:16px;">
+              📊 ผลการวิเคราะห์และค้นหาคดีอัจฉริยะโดย AI
+            </div>
+            
+            <div style="font-weight:700; font-size:14.5px; color:var(--ink);">${escapeHtml(diagnosisTitle)}</div>
+            <p style="margin:6px 0 12px 0; font-size:14px; line-height:1.5; color:var(--ink-secondary);">${diagnosisText}</p>
+            
+            <div class="step-box" style="margin-bottom:12px; background: #f1f5f9; padding: 12px; border-radius: 8px;">
+              <strong>📋 คำแนะนำทางปฏิบัติย่อย (Action Steps):</strong>
+              <div style="white-space:pre-line; margin-top:4px; font-size:13px; color:var(--ink-secondary);">${escapeHtml(actionSteps)}</div>
+            </div>
+
+            ${matchedLawsHtml ? `<div style="margin-top:12px;"><strong>📖 มาตรา พ.ร.บ.อาคารชุด ที่ตรวจจับได้:</strong> ${matchedLawsHtml}</div>` : ''}
+            ${matchedCasesHtml ? `<div style="margin-top:12px;"><strong>⚖️ คำพิพากษาศาลฎีกาอ้างอิง:</strong> ${matchedCasesHtml}</div>` : ''}
+
+            <div style="margin-top:14px; font-size:12px; color:var(--muted); text-align:right; font-style:italic;">
+              *หมายเหตุ: คำวินิจฉัยประเมินเบื้องต้นเทียบเคียงฐานข้อมูลคำพิพากษาศาลฎีกาจริงในระบบ
+            </div>
+          </div>
+        `;
+
+        chatContainer.insertAdjacentHTML('beforeend', responseMsg);
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+
+      }, 1000);
+    }
+
+    // =========================================================================
+    // 3. FAQ & TROUBLESHOOTING (FRONT & BACK)
+    // =========================================================================
+    function renderFaqs() {
+      const query = (document.getElementById('faqSearchInput')?.value || '').trim().toLowerCase();
+      const cat = document.getElementById('faqCategorySelect')?.value || 'all';
+      const list = document.getElementById('faqList');
+
+      const filtered = faqsData.filter(item => {
+        const matchCat = cat === 'all' || item.category === cat;
+        const matchText = !query ||
+          item.question.toLowerCase().includes(query) ||
+          item.answer.toLowerCase().includes(query) ||
+          item.solution.toLowerCase().includes(query) ||
+          item.ref.toLowerCase().includes(query);
+        return matchCat && matchText;
+      });
+
+      if (filtered.length === 0) {
+        list.innerHTML = `
+          <div class="empty-state">
+            <h3>ไม่พบคำถามหรือแนวทางแก้ปัญหาที่ค้นหา</h3>
+            <p>ลองเปลี่ยนคำค้นหา หรือเลือกหมวดหมู่ "ทุกประเภทปัญหา"</p>
+          </div>
+        `;
+      } else {
+        list.innerHTML = filtered.map((item, idx) => `
+          <div class="faq-item ${idx === 0 ? 'open' : ''}" id="faq-card-${item.id}">
+            <button type="button" class="faq-question" onclick="toggleFaq('${item.id}')">
+              <div>
+                <span class="tag" style="margin-bottom:6px;">${escapeHtml(item.category)}</span>
+                <div>Q: ${escapeHtml(item.question)}</div>
+              </div>
+              <span aria-hidden="true" style="font-size:18px;color:var(--muted);">▾</span>
+            </button>
+            <div class="faq-body">
+              <p style="margin-top:16px;"><strong>หลักกฎหมายและคำตอบ:</strong> ${escapeHtml(item.answer)}</p>
+              <div class="step-box">
+                <strong>แนวทางการแก้ไขปัญหา (Action Plan):</strong>
+                <div style="white-space:pre-line;margin-top:6px;">${escapeHtml(item.solution)}</div>
+              </div>
+              <p style="margin:12px 0 0 0;font-size:13.5px;color:var(--muted);">
+                <strong>แหล่งอ้างอิง:</strong> ${escapeHtml(item.ref)}
+              </p>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      // Admin table
+      const tbody = document.getElementById('faqAdminTable');
+      if (tbody) {
+        if (faqsData.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;color:var(--muted);">ยังไม่มีรายการคำถาม-ตอบ</td></tr>`;
+        } else {
+          tbody.innerHTML = faqsData.map(item => `
+            <tr>
+              <td><span class="tag">${escapeHtml(item.category)}</span></td>
+              <td><strong>${escapeHtml(item.question)}</strong></td>
+              <td>${escapeHtml(item.ref)}</td>
+              <td style="white-space:nowrap;">
+                <button type="button" class="btn btn-secondary btn-sm" onclick="editFaq('${item.id}')">แก้ไข</button>
+                <button type="button" class="btn btn-danger btn-sm" onclick="deleteFaq('${item.id}')">ลบ</button>
+              </td>
+            </tr>
+          `).join('');
+        }
+      }
+    }
+
+    function toggleFaq(id) {
+      const el = document.getElementById('faq-card-' + id);
+      if (el) el.classList.toggle('open');
+    }
+
+    function saveFaq(e) {
+      e.preventDefault();
+      const editId = document.getElementById('faqEditId').value;
+      const category = document.getElementById('faqCategoryInput').value;
+      const question = document.getElementById('faqQuestionInput').value.trim();
+      const answer = document.getElementById('faqAnswerInput').value.trim();
+      const solution = document.getElementById('faqSolutionInput').value.trim();
+      const ref = document.getElementById('faqRefInput').value.trim();
+      const errEl = document.getElementById('faqFormError');
+
+      if (!question || !answer || !solution || !ref) {
+        errEl.style.display = 'block';
+        return;
+      }
+      errEl.style.display = 'none';
+
+      if (editId) {
+        const idx = faqsData.findIndex(x => x.id === editId);
+        if (idx > -1) {
+          faqsData[idx] = { id: editId, category, question, answer, solution, ref };
+        }
+      } else {
+        faqsData.unshift({
+          id: 'faq-' + Date.now(),
+          category,
+          question,
+          answer,
+          solution,
+          ref
+        });
+      }
+      resetFaqForm();
+      saveToPersistStore();
+      renderFaqs();
+    }
+
+    function editFaq(id) {
+      const item = faqsData.find(x => x.id === id);
+      if (!item) return;
+      document.getElementById('faqFormHeading').textContent = 'แก้ไขคำถาม-แนวทางแก้ปัญหา';
+      document.getElementById('faqEditId').value = item.id;
+      document.getElementById('faqCategoryInput').value = item.category;
+      document.getElementById('faqQuestionInput').value = item.question;
+      document.getElementById('faqAnswerInput').value = item.answer;
+      document.getElementById('faqSolutionInput').value = item.solution;
+      document.getElementById('faqRefInput').value = item.ref;
+      document.getElementById('faqFormError').style.display = 'none';
+    }
+
+    function deleteFaq(id) {
+      faqsData = faqsData.filter(x => x.id !== id);
+      saveToPersistStore();
+      renderFaqs();
+    }
+
+    function resetFaqForm() {
+      document.getElementById('faqFormHeading').textContent = 'เพิ่มหัวข้อถาม-ตอบแนวทางแก้ปัญหา';
+      document.getElementById('faqEditId').value = '';
+      document.getElementById('faqForm').reset();
+      document.getElementById('faqFormError').style.display = 'none';
+    }
+
+    // =========================================================================
+    // 4. SUPREME COURT CASE STUDIES (FRONT & BACK)
+    // =========================================================================
+    function renderCases() {
+      const query = (document.getElementById('caseSearchInput')?.value || '').trim().toLowerCase();
+      const topic = document.getElementById('caseTopicSelect')?.value || 'all';
+      const list = document.getElementById('casesList');
+
+      const filtered = casesData.filter(item => {
+        const matchTopic = topic === 'all' || item.topic === topic;
+        const matchText = !query ||
+          item.dika.toLowerCase().includes(query) ||
+          item.title.toLowerCase().includes(query) ||
+          item.facts.toLowerCase().includes(query) ||
+          item.ruling.toLowerCase().includes(query) ||
+          item.takeaway.toLowerCase().includes(query);
+        return matchTopic && matchText;
+      });
+
+      if (filtered.length === 0) {
+        list.innerHTML = `
+          <div class="empty-state">
+            <h3>ไม่พบกรณีศึกษาคำพิพากษาศาลฎีกาที่ค้นหา</h3>
+            <p>ลองเปลี่ยนคำค้นหา หรือเลือก "ทุกประเด็นข้อพิพาท"</p>
+          </div>
+        `;
+      } else {
+        list.innerHTML = filtered.map(item => `
+          <article class="case-card">
+            <div class="case-header">
+              <span class="case-id">⚖️ ${escapeHtml(item.dika)}</span>
+              <span class="tag tag-amber">${escapeHtml(item.topic)}</span>
+            </div>
+            <h3 style="margin:0 0 8px 0;font-size:18px;">${escapeHtml(item.title)}</h3>
+            <div class="case-grid">
+              <div class="case-block">
+                <h4>ข้อเท็จจริงและประเด็นพิพาท</h4>
+                <p>${escapeHtml(item.facts)}</p>
+              </div>
+              <div class="case-block">
+                <h4>คำวินิจฉัยศาลฎีกา</h4>
+                <p>${escapeHtml(item.ruling)}</p>
+              </div>
+              <div class="case-block" style="background:var(--brand-soft);border-color:#bfdbfe;">
+                <h4 style="color:var(--brand);">บทเรียนสำหรับนิติบุคคลอาคารชุด</h4>
+                <p>${escapeHtml(item.takeaway)}</p>
+              </div>
+            </div>
+          </article>
+        `).join('');
+      }
+
+      // Admin table
+      const tbody = document.getElementById('casesAdminTable');
+      if (tbody) {
+        if (casesData.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;color:var(--muted);">ยังไม่มีข้อมูลกรณีศึกษา</td></tr>`;
+        } else {
+          tbody.innerHTML = casesData.map(item => `
+            <tr>
+              <td><strong>${escapeHtml(item.dika)}</strong></td>
+              <td><span class="tag tag-amber">${escapeHtml(item.topic)}</span></td>
+              <td>${escapeHtml(item.title)}</td>
+              <td style="white-space:nowrap;">
+                <button type="button" class="btn btn-secondary btn-sm" onclick="editCase('${item.id}')">แก้ไข</button>
+                <button type="button" class="btn btn-danger btn-sm" onclick="deleteCase('${item.id}')">ลบ</button>
+              </td>
+            </tr>
+          `).join('');
+        }
+      }
+    }
+
+    function saveCase(e) {
+      e.preventDefault();
+      const editId = document.getElementById('caseEditId').value;
+      const dika = document.getElementById('caseDikaInput').value.trim();
+      const topic = document.getElementById('caseTopicInput').value;
+      const title = document.getElementById('caseTitleInput').value.trim();
+      const facts = document.getElementById('caseFactsInput').value.trim();
+      const ruling = document.getElementById('caseRulingInput').value.trim();
+      const takeaway = document.getElementById('caseTakeawayInput').value.trim();
+      const errEl = document.getElementById('caseFormError');
+
+      if (!dika || !title || !facts || !ruling || !takeaway) {
+        errEl.style.display = 'block';
+        return;
+      }
+      errEl.style.display = 'none';
+
+      if (editId) {
+        const idx = casesData.findIndex(x => x.id === editId);
+        if (idx > -1) {
+          casesData[idx] = { id: editId, dika, topic, title, facts, ruling, takeaway };
+        }
+      } else {
+        casesData.unshift({
+          id: 'case-' + Date.now(),
+          dika,
+          topic,
+          title,
+          facts,
+          ruling,
+          takeaway
+        });
+      }
+      resetCaseForm();
+      saveToPersistStore();
+      renderCases();
+    }
+
+    function editCase(id) {
+      const item = casesData.find(x => x.id === id);
+      if (!item) return;
+      document.getElementById('caseFormHeading').textContent = 'แก้ไขกรณีศึกษา: ' + item.dika;
+      document.getElementById('caseEditId').value = item.id;
+      document.getElementById('caseDikaInput').value = item.dika;
+      document.getElementById('caseTopicInput').value = item.topic;
+      document.getElementById('caseTitleInput').value = item.title;
+      document.getElementById('caseFactsInput').value = item.facts;
+      document.getElementById('caseRulingInput').value = item.ruling;
+      document.getElementById('caseTakeawayInput').value = item.takeaway;
+      document.getElementById('caseFormError').style.display = 'none';
+    }
+
+    function deleteCase(id) {
+      casesData = casesData.filter(x => x.id !== id);
+      saveToPersistStore();
+      renderCases();
+    }
+
+    function resetCaseForm() {
+      document.getElementById('caseFormHeading').textContent = 'เพิ่มกรณีศึกษาคดีใหม่';
+      document.getElementById('caseEditId').value = '';
+      document.getElementById('caseForm').reset();
+      document.getElementById('caseFormError').style.display = 'none';
+    }
+
+    // =========================================================================
+    // 5. COMMUNITY Q&A FORUM (USER-ENTERED CONTENT STARTS EMPTY)
+    // =========================================================================
+    function renderForum() {
+      const container = document.getElementById('threadsContainer');
+      const isBack = currentMode === 'back';
+
+      if (forumThreads.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <h3>ยังไม่มีกระทู้ถาม-ตอบในขณะนี้</h3>
+            <p>ร่วมเป็นคนแรกในการตั้งกระทู้สอบถามข้อกฎหมาย พ.ร.บ.อาคารชุด หรือแลกเปลี่ยนความคิดเห็นการบริหารอาคารชุดผ่านแบบฟอร์มด้านซ้าย</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = forumThreads.map(thread => `
+        <article class="thread-card">
+          <div class="thread-meta">
+            <span class="tag">${escapeHtml(thread.category)}</span>
+            <span>โดย <strong>${escapeHtml(thread.author)}</strong></span>
+            <span>• ${escapeHtml(thread.createdAt)}</span>
+            ${isBack ? `<button type="button" class="btn btn-danger btn-sm" style="margin-left:auto;" onclick="deleteThread('${thread.id}')">ลบกระทู้ (หลังบ้าน)</button>` : ''}
+          </div>
+          <h3 style="margin:6px 0 8px 0;font-size:18px;">${escapeHtml(thread.title)}</h3>
+          <p style="margin:0;white-space:pre-line;color:var(--ink-secondary);">${escapeHtml(thread.body)}</p>
+
+          <div class="comment-list">
+            <h4 style="margin:0 0 10px 0;font-size:14px;color:var(--muted);">ความคิดเห็นและคำตอบ (${thread.comments.length})</h4>
+            ${thread.comments.length === 0 ? `<p style="font-size:14px;color:var(--muted);margin:0 0 12px 0;">ยังไม่มีความคิดเห็น ร่วมแสดงความคิดเห็นคนแรกได้ด้านล่าง</p>` : ''}
+            ${thread.comments.map(c => `
+              <div class="comment-item ${c.isOfficial ? 'official-reply' : ''}">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+                  <strong>${escapeHtml(c.author)} ${c.isOfficial ? '<span class="tag" style="margin-left:6px;">ความเห็นฝ่ายกฎหมาย / นิติบุคคล</span>' : ''}</strong>
+                  <span style="font-size:12px;color:var(--muted);">${escapeHtml(c.createdAt)}</span>
+                </div>
+                <div style="white-space:pre-line;">${escapeHtml(c.text)}</div>
+              </div>
+            `).join('')}
+
+            <form onsubmit="addComment(event, '${thread.id}')" style="margin-top:12px;display:flex;flex-wrap:wrap;gap:8px;" novalidate>
+              <input type="text" id="commentAuthor-${thread.id}" class="input" style="flex:1 1 180px;" placeholder="${isBack ? 'ชื่อผู้ดูแล / ฝ่ายกฎหมายนิติบุคคล' : 'ชื่อผู้แสดงความคิดเห็น'}" value="${isBack ? 'ฝ่ายกฎหมายนิติบุคคลอาคารชุด' : ''}" required>
+              <input type="text" id="commentText-${thread.id}" class="input" style="flex:2 1 280px;" placeholder="พิมพ์ความคิดเห็นหรือคำแนะนำทางกฎหมาย..." required>
+              <button type="submit" class="btn ${isBack ? 'btn-accent' : 'btn-secondary'} btn-sm">
+                ${isBack ? 'ตอบกลับ in นามนิติบุคคล' : 'ส่งความคิดเห็น'}
+              </button>
+            </form>
+          </div>
+        </article>
+      `).join('');
+    }
+
+    function createThread(e) {
+      e.preventDefault();
+      const author = document.getElementById('threadAuthorInput').value.trim();
+      const category = document.getElementById('threadCategoryInput').value;
+      const title = document.getElementById('threadTitleInput').value.trim();
+      const body = document.getElementById('threadBodyInput').value.trim();
+      const errEl = document.getElementById('threadFormError');
+
+      if (!author || !title || !body) {
+        errEl.style.display = 'block';
+        return;
+      }
+      errEl.style.display = 'none';
+
+      const now = new Date();
+      const timeStr = now.toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+
+      forumThreads.unshift({
+        id: 'thread-' + Date.now(),
+        author,
+        category,
+        title,
+        body,
+        createdAt: timeStr,
+        comments: []
+      });
+
+      document.getElementById('threadForm').reset();
+      renderForum();
+    }
+
+    function addComment(e, threadId) {
+      e.preventDefault();
+      const authorEl = document.getElementById('commentAuthor-' + threadId);
+      const textEl = document.getElementById('commentText-' + threadId);
+      const author = authorEl.value.trim();
+      const text = textEl.value.trim();
+      if (!author || !text) return;
+
+      const thread = forumThreads.find(t => t.id === threadId);
+      if (!thread) return;
+
+      const now = new Date();
+      const timeStr = now.toLocaleDateString('th-TH', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+
+      thread.comments.push({
+        id: 'c-' + Date.now(),
+        author,
+        text,
+        createdAt: timeStr,
+        isOfficial: currentMode === 'back'
+      });
+
+      textEl.value = '';
+      renderForum();
+    }
+
+    function deleteThread(threadId) {
+      forumThreads = forumThreads.filter(t => t.id !== threadId);
+      renderForum();
+    }
+
+    // =========================================================================
+    // 5. INTERACTIVE MONTHLY ROTATING QUIZ & RANKING (10 QUESTIONS BATCH)
+    // =========================================================================
+    
+    // Mapping of Months to Law Sections
+    const monthlySectionMap = {
+      'มกราคม': 'มาตรา 18',
+      'กุมภาพันธ์': 'มาตรา 18/1',
+      'มีนาคม': 'มาตรา 17/1',
+      'เมษายน': 'มาตรา 29',
+      'พฤษภาคม': 'มาตรา 41',
+      'มิถุนายน': 'มาตรา 4',
+      'กรกฎาคม': 'มาตรา 15',
+      'สิงหาคม': 'มาตรา 32',
+      'กันยายน': 'มาตรา 33',
+      'ตุลาคม': 'มาตรา 35',
+      'พฤศจิกายน': 'มาตรา 48',
+      'ธันวาคม': 'มาตรา 65'
+    };
+
+    function updateQuizSectionHint() {
+      const month = document.getElementById('quizMonthSelect').value;
+      const section = monthlySectionMap[month] || 'มาตรา 18';
+      document.getElementById('quizSectionHint').innerHTML = `สุ่มคลังข้อสอบเฉพาะ <strong>${escapeHtml(section)}</strong> เพื่อใช้ทดสอบความรู้`;
+    }
+
+    function startQuizSession() {
+      const nameInput = document.getElementById('quizParticipantName');
+      const participantName = nameInput.value.trim();
+      if (!participantName) {
+        alert('กรุณากรอกชื่อผู้ทดสอบเพื่อนำไปบันทึกตาราง Ranking คะแนน!');
+        nameInput.focus();
+        return;
+      }
+
+      const selectedMonth = document.getElementById('quizMonthSelect').value;
+      const targetSection = monthlySectionMap[selectedMonth] || 'มาตรา 18';
+
+      // Gather candidate questions for the target section
+      let candidates = quizData.filter(q => q.section === targetSection);
+      
+      // If we don't have enough matching questions in custom database, fill with general/other questions
+      if (candidates.length < 10) {
+        const others = quizData.filter(q => q.section !== targetSection);
+        // Shuffle others and append to make up 10 questions (or as many as available)
+        const shuffledOthers = others.sort(() => 0.5 - Math.random());
+        candidates = candidates.concat(shuffledOthers);
+      }
+
+      // Final shuffle of candidates and slice to exactly 10 questions (or up to 10 if total database is smaller)
+      let selectedBatch = candidates.sort(() => 0.5 - Math.random()).slice(0, 10);
+
+      if (selectedBatch.length === 0) {
+        alert('ไม่มีคำถามในคลังข้อสอบขณะนี้ กรุณาเพิ่มข้อสอบในระบบหลังบ้านก่อนครับ');
+        return;
+      }
+
+      // Initialize Active Session state
+      activeQuizSession.participantName = participantName;
+      activeQuizSession.selectedMonth = selectedMonth;
+      activeQuizSession.targetSection = targetSection;
+      activeQuizSession.currentBatchQuestions = selectedBatch;
+      activeQuizSession.currentIndex = 0;
+      activeQuizSession.score = 0;
+      activeQuizSession.elapsedSeconds = 0;
+      activeQuizSession.startTime = Date.now();
+
+      // Show Quiz layout, hide entry lobby
+      document.getElementById('quizLobby').classList.add('hidden');
+      document.getElementById('quizPlayArea').classList.remove('hidden');
+
+      // Start live timer intervals
+      if (activeQuizSession.timerIntervalId) clearInterval(activeQuizSession.timerIntervalId);
+      activeQuizSession.timerIntervalId = setInterval(updateLiveTimer, 100);
+
+      renderActiveQuizQuestion();
+    }
+
+    function updateLiveTimer() {
+      const elapsedMs = Date.now() - activeQuizSession.startTime;
+      activeQuizSession.elapsedSeconds = elapsedMs / 1000;
+      document.getElementById('quizLiveTimer').textContent = `เวลาที่ใช้: ${activeQuizSession.elapsedSeconds.toFixed(1)} วินาที`;
+    }
+
+    function renderActiveQuizQuestion() {
+      const idx = activeQuizSession.currentIndex;
+      const batch = activeQuizSession.currentBatchQuestions;
+      const q = batch[idx];
+      const progressText = `ข้อที่ ${idx + 1} จาก ${batch.length} (มาตรา: ${q.section})`;
+      
+      document.getElementById('quizCurrentProgress').textContent = progressText;
+      document.getElementById('quizTimerBarFill').style.width = `${((idx + 1) / batch.length) * 100}%`;
+      document.getElementById('quizQuestionText').textContent = q.question;
+
+      // Hide feedback box and next button
+      document.getElementById('quizFeedbackBox').classList.add('hidden');
+      document.getElementById('quizNextBtn').classList.add('hidden');
+
+      const optionsContainer = document.getElementById('quizOptionsList');
+      optionsContainer.innerHTML = '';
+
+      const labels = ['ก.', 'ข.', 'ค.', 'ง.'];
+      q.options.forEach((opt, oIdx) => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'quiz-option';
+        btn.innerHTML = `<strong>${labels[oIdx]}</strong> <span>${escapeHtml(opt)}</span>`;
+        btn.onclick = () => submitQuizAnswer(oIdx);
+        optionsContainer.appendChild(btn);
+      });
+    }
+
+    function submitQuizAnswer(selectedIdx) {
+      // Disable further option clicks
+      const optionsButtons = document.querySelectorAll('.quiz-option');
+      optionsButtons.forEach(btn => btn.disabled = true);
+
+      const idx = activeQuizSession.currentIndex;
+      const q = activeQuizSession.currentBatchQuestions[idx];
+      const correctIdx = q.answerIndex;
+
+      // Colorize options
+      optionsButtons.forEach((btn, oIdx) => {
+        if (oIdx === correctIdx) {
+          btn.classList.add('correct');
+        } else if (oIdx === selectedIdx) {
+          btn.classList.add('wrong');
+        }
+      });
+
+      // Update score if correct
+      const isCorrect = selectedIdx === correctIdx;
+      if (isCorrect) {
+        activeQuizSession.score += 1;
+      }
+
+      // Show feedback
+      const feedbackBox = document.getElementById('quizFeedbackBox');
+      const feedbackTitle = document.getElementById('quizFeedbackTitle');
+      const feedbackText = document.getElementById('quizFeedbackText');
+
+      feedbackTitle.textContent = isCorrect ? '✅ ตอบถูกต้อง!' : '❌ คำตอบยังไม่ถูกต้อง (คำตอบที่ถูกคือตัวเลือก ' + ['ก.', 'ข.', 'ค.', 'ง.'][correctIdx] + ')';
+      feedbackText.textContent = q.explanation;
+      feedbackBox.classList.remove('hidden');
+
+      // Show next button
+      const nextBtn = document.getElementById('quizNextBtn');
+      nextBtn.textContent = (idx + 1 < activeQuizSession.currentBatchQuestions.length) ? 'คำถามข้อถัดไป →' : 'ดูผลการทดสอบ & Ranking 🏆';
+      nextBtn.classList.remove('hidden');
+    }
+
+    function advanceQuizQuestion() {
+      const idx = activeQuizSession.currentIndex;
+      const batch = activeQuizSession.currentBatchQuestions;
+
+      if (idx + 1 < batch.length) {
+        activeQuizSession.currentIndex += 1;
+        renderActiveQuizQuestion();
+      } else {
+        // Finish session & record results to ranking
+        clearInterval(activeQuizSession.timerIntervalId);
+        finishQuizSession();
+      }
+    }
+
+    function finishQuizSession() {
+      const finalTimeSpentStr = `${activeQuizSession.elapsedSeconds.toFixed(1)} วินาที`;
+      const dateNow = new Date();
+      const dateStr = dateNow.toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: 'numeric' });
+
+      // Add to local ranking array
+      const newRanking = {
+        id: 'rank-' + Date.now(),
+        name: activeQuizSession.participantName,
+        score: activeQuizSession.score,
+        section: `${activeQuizSession.selectedMonth} (${activeQuizSession.targetSection})`,
+        timeSpent: finalTimeSpentStr,
+        date: dateStr,
+        rawSeconds: activeQuizSession.elapsedSeconds
+      };
+
+      leaderboardEntries.push(newRanking);
+      
+      // Sort: 1) Score Descending, 2) Time spent ascending
+      leaderboardEntries.sort((a, b) => {
+        if (b.score !== a.score) {
+          return b.score - a.score;
+        }
+        return (a.rawSeconds || 999) - (b.rawSeconds || 999);
+      });
+
+      saveToPersistStore();
+
+      // Alert final score
+      alert(`🎉 สิ้นสุดแบบทดสอบ คุณ ${activeQuizSession.participantName} ได้คะแนน ${activeQuizSession.score} / ${activeQuizSession.currentBatchQuestions.length} คะแนน ใช้เวลาทำไปทั้งสิ้น ${finalTimeSpentStr}!`);
+
+      // Reset layouts
+      document.getElementById('quizPlayArea').classList.add('hidden');
+      document.getElementById('quizLobby').classList.remove('hidden');
+      
+      // Render updated Ranking
+      renderLeaderboard();
+    }
+
+    function renderLeaderboard() {
+      const body = document.getElementById('quizLeaderboardBody');
+      if (!body) return;
+
+      if (leaderboardEntries.length === 0) {
+        body.innerHTML = `
+          <tr>
+            <td colspan="6" style="text-align:center; color:var(--muted); padding:20px;">ยังไม่มีข้อมูลผลการทดสอบร่วมจัดอันดับ</td>
+          </tr>
+        `;
+        return;
+      }
+
+      body.innerHTML = leaderboardEntries.map((entry, index) => {
+        let badgeClass = 'rank-other';
+        if (index === 0) badgeClass = 'rank-1';
+        else if (index === 1) badgeClass = 'rank-2';
+        else if (index === 2) badgeClass = 'rank-3';
+
+        return `
+          <tr>
+            <td style="text-align:center;">
+              <span class="rank-badge ${badgeClass}">${index + 1}</span>
+            </td>
+            <td><strong>${escapeHtml(entry.name)}</strong></td>
+            <td><span class="tag tag-green" style="font-size:13.5px;">${entry.score} คะแนน</span></td>
+            <td>${escapeHtml(entry.section)}</td>
+            <td>⏱️ ${escapeHtml(entry.timeSpent)}</td>
+            <td style="font-size:13px; color:var(--muted);">${escapeHtml(entry.date)}</td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function clearLeaderboardData() {
+      if (confirm('คุณแน่ใจหรือไม่ว่าต้องการล้างสถิติตารางคะแนน Ranking ทั้งหมด?')) {
+        leaderboardEntries = [];
+        saveToPersistStore();
+        renderLeaderboard();
+      }
+    }
+
+    // =========================================================================
+    // QUIZ DATABASE ADMINISTRATION (BACK-OFFICE)
+    // =========================================================================
+    function renderQuizAdminTable() {
+      const tbody = document.getElementById('quizAdminTable');
+      if (!tbody) return;
+
+      if (quizData.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;color:var(--muted);padding:16px;">ไม่มีรายการข้อสอบในฐานข้อมูล</td></tr>`;
+        return;
+      }
+
+      const labels = ['ก.', 'ข.', 'ค.', 'ง.'];
+      tbody.innerHTML = quizData.map((item, idx) => `
+        <tr>
+          <td><span class="tag tag-amber">${escapeHtml(item.section)}</span></td>
+          <td>
+            <strong>${escapeHtml(item.question)}</strong>
+            <div style="font-size:12px; color:var(--muted); margin-top:4px;">
+              ก: ${escapeHtml(item.options[0])} | ข: ${escapeHtml(item.options[1])} | ค: ${escapeHtml(item.options[2])} | ง: ${escapeHtml(item.options[3])}
+            </div>
+          </td>
+          <td><span class="tag tag-green">${labels[item.answerIndex]} ${escapeHtml(item.options[item.answerIndex])}</span></td>
+          <td style="white-space:nowrap;">
+            <button type="button" class="btn btn-secondary btn-sm" onclick="editQuizItem('${item.id}')">แก้ไข</button>
+            <button type="button" class="btn btn-danger btn-sm" onclick="deleteQuizItem('${item.id}')">ลบ</button>
+          </td>
+        </tr>
+      `).join('');
+
+      // Also update database counts in dashboard
+      const countEl = document.getElementById('aiDbStatusText');
+      if (countEl) {
+        countEl.textContent = `เชื่อมต่อกับฐานข้อมูล พ.ร.บ. (${lawsData.length} มาตรา) และคลังข้อสอบ (${quizData.length} ข้อ)`;
+      }
+    }
+
+    function saveQuizItem(e) {
+      e.preventDefault();
+      const editId = document.getElementById('quizEditId').value;
+      const question = document.getElementById('quizQuestionInput').value.trim();
+      const section = document.getElementById('quizTargetSectionSelect').value;
+      const opt0 = document.getElementById('quizOpt0').value.trim();
+      const opt1 = document.getElementById('quizOpt1').value.trim();
+      const opt2 = document.getElementById('quizOpt2').value.trim();
+      const opt3 = document.getElementById('quizOpt3').value.trim();
+      const answerIndex = parseInt(document.getElementById('quizAnswerSelect').value, 10);
+      const explanation = document.getElementById('quizExpInput').value.trim();
+      const errEl = document.getElementById('quizFormError');
+
+      if (!question || !opt0 || !opt1 || !opt2 || !opt3 || !explanation) {
+        errEl.style.display = 'block';
+        return;
+      }
+      errEl.style.display = 'none';
+
+      const options = [opt0, opt1, opt2, opt3];
+      if (editId) {
+        const idx = quizData.findIndex(x => x.id === editId);
+        if (idx > -1) {
+          quizData[idx] = { id: editId, question, section, options, answerIndex, explanation };
+        }
+      } else {
+        quizData.push({
+          id: 'q-custom-' + Date.now(),
+          question,
+          section,
+          options,
+          answerIndex,
+          explanation
+        });
+      }
+
+      resetQuizForm();
+      saveToPersistStore();
+      renderQuizAdminTable();
+      alert('บันทึกข้อมูลข้อสอบและอัปเดตลงคลังอัจฉริยะรายเดือนเรียบร้อยแล้ว!');
+    }
+
+    function editQuizItem(id) {
+      const item = quizData.find(x => x.id === id);
+      if (!item) return;
+
+      document.getElementById('quizFormHeading').textContent = 'แก้ไขโจทย์ข้อสอบ Quiz';
+      document.getElementById('quizEditId').value = item.id;
+      document.getElementById('quizQuestionInput').value = item.question;
+      document.getElementById('quizTargetSectionSelect').value = item.section || 'มาตรา 18';
+      document.getElementById('quizOpt0').value = item.options[0] || '';
+      document.getElementById('quizOpt1').value = item.options[1] || '';
+      document.getElementById('quizOpt2').value = item.options[2] || '';
+      document.getElementById('quizOpt3').value = item.options[3] || '';
+      document.getElementById('quizAnswerSelect').value = String(item.answerIndex);
+      document.getElementById('quizExpInput').value = item.explanation;
+      document.getElementById('quizFormError').style.display = 'none';
+      
+      // Scroll to form nicely
+      document.getElementById('quizForm').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function deleteQuizItem(id) {
+      if (confirm('ยืนยันลบคำถามข้อนี้ออกจากคลังข้อสอบหรือไม่?')) {
+        quizData = quizData.filter(x => x.id !== id);
+        saveToPersistStore();
+        renderQuizAdminTable();
+      }
+    }
+
+    function resetQuizForm() {
+      document.getElementById('quizFormHeading').textContent = 'เพิ่มข้อสอบ Quiz ใหม่';
+      document.getElementById('quizEditId').value = '';
+      document.getElementById('quizForm').reset();
+      document.getElementById('quizFormError').style.display = 'none';
+    }
+
+    // Render Government Agencies Directory Card Grid
+    function renderGovAgencies() {
+      const grid = document.getElementById('govAgenciesGrid');
+      if (!grid) return;
+
+      grid.innerHTML = govAgencies.map(agency => `
+        <article class="law-card" style="border-left-color: var(--accent); background: var(--surface);">
+          <div>
+            <span class="tag tag-amber" style="margin-bottom:8px;">🏛️ หน่วยงานภาครัฐ</span>
+            <h3 class="law-title" style="font-size: 16px; margin-top:4px;">${escapeHtml(agency.name)}</h3>
+            <p style="font-size: 13.5px; color: var(--ink-secondary); margin-bottom: 12px; text-align: justify;">
+              <strong>บทบาทหน้าที่:</strong> ${escapeHtml(agency.role)}
+            </p>
+            <p style="font-size: 13px; color: var(--muted); margin: 0 0 8px 0;">
+              📞 <strong>ติดต่อ:</strong> ${escapeHtml(agency.contact)}
+            </p>
+          </div>
+          <div class="law-note" style="border-left-color: var(--accent); font-size:12.5px; background: var(--bg);">
+            <strong>💡 ข้อแนะนำทางปฏิบัติ:</strong> ${escapeHtml(agency.advice)}
+          </div>
+        </article>
+      `).join('');
+    }
+
+    // =========================================================================
+    // INITIALIZE RENDER
+    // =========================================================================
+    function renderAll() {
+      renderLaws();
+      renderFaqs();
+      renderCases();
+      renderForum();
+      renderLeaderboard();
+      renderQuizAdminTable();
+      updateQuizSectionHint();
+      renderGovAgencies();
+
+      // Update credentials update form values
+      if (document.getElementById('updateUsername')) {
+        document.getElementById('updateUsername').value = adminUsername;
+      }
+      if (document.getElementById('updatePassword')) {
+        document.getElementById('updatePassword').value = adminPassword;
+      }
+    }
+
+    // Escape special HTML chars helper
+    function escapeHtml(str) {
+      return String(str || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    // Trigger initial renders cleanly
+    renderAll();
+  </script>
+</body>
+</html>
